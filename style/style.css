@@ -1,0 +1,125 @@
+* {
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+.navbar {
+    overflow: hidden;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    box-shadow: 0 0 6px 3px rgba(0, 0, 0, 0.3);  
+}
+
+.navbar a{
+    display: block;
+    text-align: center;
+    text-decoration: none;
+}
+
+.navbar .img-logo a{
+    font-size: xx-large;
+    color: green;
+    font-weight: bold;
+    padding: 15px;
+}
+
+.navbar .img-logo{
+    margin-left: 60px;
+    float: left;
+}
+
+.navbar .links a {
+    padding: 23px;
+    font-size: 15pt;
+}
+.navbar .links {
+    display: flex;
+    float: right;
+    margin-right: 60px;
+}
+
+.navbar a:hover {
+    background: #ddd;
+}
+
+.main{
+    background-image: url("../imgs/navimghome.jpg");
+    background-repeat: none;
+    background-size: cover;
+    padding: 9%;
+    background-position: left;
+    height: 60vh;
+}
+
+.main .citazione{
+    text-align: center;
+    color: white;
+    font-size: 24pt;
+    font-weight:bold;
+}
+
+.sec-main{
+    padding: 7%;
+    text-align: center;
+}
+.sec-main b{
+    text-align: center;
+    font-size: 20pt;
+}
+.sec-main p{
+    text-align: center;
+    font-size: 16pt;
+}
+
+.sec-main .sec-how{
+    margin-top: 8%;
+}
+.sec-main .sec-how .card p{
+    font-size: medium;
+}
+.sec-button-lancia{
+    background-image: url("../imgs/img-segnala-home.jpg");
+    background-repeat: none;
+    background-size: cover;
+    padding: 9%;
+    background-position: left;
+
+    padding: 3%;
+    color: white;
+    text-align: center;
+    
+}
+.sec-button-lancia span{
+    font-weight: bold;
+    font-size: 20pt;
+}
+.sec-button-lancia button{
+    font-size: larger;
+    color: white;
+    padding: 1%;
+}
+
+footer{
+    margin-top: 4%;
+    background-color: rgb(50, 44, 44);
+    color: white;
+    padding: 5%;
+}
+footer .info-contact div{
+    margin-top: 4%;
+    
+}
+footer .info-contact div span{
+    margin-left: 4%;
+    
+}
+footer .links {
+    display: grid;
+}
+footer .links a{
+    color: white;
+    font-size: large;
+    text-decoration: none;
+}
