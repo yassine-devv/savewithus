@@ -1,0 +1,71 @@
+*{
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+
+}
+
+body{
+    height: 100vh;
+}
+
+.form-cite{
+    height: 87.8vh;
+}
+
+.sez-form{
+    align-content: center;
+}
+
+.sez-form .title{
+    font-weight: bold;
+    font-size: xx-large;
+}
+
+form .inputs-r {
+    margin-top: 5%;
+}
+
+form .inputs-r input{
+    width: 100%;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-bottom-color: rgb(211, 204, 204);
+    outline: none;
+    font-size: medium;
+    padding-bottom: 3%;
+}
+
+form .inp-l input{
+    width: 50%;
+    margin-top: 5%;
+}
+
+form .inputs-r input:focus{
+    border-bottom-color: #563B0E;
+}
+
+form .inputs-r .icon-viewpass{
+    padding-left: 0px;
+}
+
+.sec-cite-reg{
+    background-image: url("../imgs/img-cite-reg.jpeg");
+}
+
+.sec-cite-log{
+    background-image: url("../imgs/img-cite-log.jpg");
+}
+
+.sec-cite{
+    background-size: cover;
+    background-position: bottom;
+    color: white;
+    align-content: center;
+}
+
+.sec-cite p{
+    text-align: right;
+    font-size: x-large;
+    margin: 5%;
+}
