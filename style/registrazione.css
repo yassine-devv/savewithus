@@ -69,3 +69,10 @@ form .inputs-r .icon-viewpass{
     font-size: x-large;
     margin: 5%;
 }
+
+.alert-danger{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}

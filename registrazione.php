@@ -14,7 +14,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     //die($sql);
     if($conn->query($sql)){
-        header("location: index.php");
+        $id = $conn->insert_id; //prendo l'ultimo id dell'utente
+
+        $id_token = uniqid();
+        $id_token_hash = password_hash($id_token, PASSWORD_BCRYPT);
+
+        $sql = "INSERT INTO `cod_tokens`(`token`, `id_user`) VALUES ('".$id_token_hash."','".$id."')";
+
+        if($conn->query($sql)){
+            header("location: index.php");
+        }
+        
     }
 }
 

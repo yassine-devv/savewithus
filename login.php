@@ -1,13 +1,59 @@
+<?php 
+//session_unset();
+session_start();
+include("./db.php");
+
+if($_SERVER['REQUEST_METHOD'] == "POST"){
+    $username = $conn->real_escape_string(stripslashes($_POST['username']));
+    $password = $conn->real_escape_string(stripslashes($_POST['password']));
+
+    $sql = "SELECT * from utenti WHERE utenti.username='".$username."'";
+    $ris = $conn->query($sql);
+
+    if($ris->num_rows > 1){
+        while($row = $ris->fetch_assoc()){
+            if(password_verify($password, $row['password'])){
+                //die("password corretta");
+
+                //set cookie per ricordare l'user
+                if(isset($_POST['ricordami'])){
+                    $sqltok = "SELECT * from cod_tokens where cod_tokens.id_user=".$row['id_user'];
+                    $ristok = $conn->query($sqltok);
+
+                    if($ristok->num_rows > 0){
+                        while($rowtok = $ristok->fetch_assoc()){
+                            setcookie("remember_user", $rowtok['token'], time()+1296000); //cookie per 15 giorni
+                        }
+                    }
+                }
+
+                $_SESSION['iduser'] = $row['id_user'];
+                $_SESSION['username'] = $row['username'];
+
+                header("location: index.php");
+            }else{
+                $err = ' 2 Credenziali non corrette, riprova.'; 
+            }
+        }
+    }else{
+        $err = ' 1 Credenziali non corrette, riprova.'; 
+    }
+
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrazione - SaveWithUs</title>
+    <title>Login - SaveWithUs</title>
 
     <link rel="stylesheet" href="./style/registrazione.css">
     <link rel="stylesheet" href="./style/style.css">
+    <script src="./js/app.js"></script>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
@@ -42,11 +88,23 @@
             <div class="col sez-form" style="padding: 4%;">
                 <span class="title">Login</span>
 
-                <form name="form-log" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+                <form name="form-log" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" onsubmit="return verify_login()">
                     <div class="inputs-r inp-l">
-                        <input type="text" placeholder="Username"> <br>
-                        <input type="password" placeholder="Passowrd">
+                        <input type="text" placeholder="Username" name="username"> <br>
+                        <input type="password" placeholder="Passowrd" name="password">
                     </div>
+
+
+                    <?php 
+                    if(isset($err)){
+                        echo '<span style="color: red; font-weight: bold">'.$err.'</span>';
+                    }
+                    ?>
+
+                    <br>
+
+                    <input type="checkbox" name="ricordami" value="ricordami">
+                    <label>Ricordami</label>
 
                     <br><br>
 
