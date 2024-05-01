@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Apr 30, 2024 alle 09:45
--- Versione del server: 10.1.36-MariaDB
--- Versione PHP: 7.2.11
+-- Creato il: Mag 01, 2024 alle 22:25
+-- Versione del server: 10.4.27-MariaDB
+-- Versione PHP: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -32,7 +31,7 @@ CREATE TABLE `amministratori` (
   `id_admin` int(11) NOT NULL,
   `username` varchar(10) NOT NULL,
   `password` char(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -47,7 +46,7 @@ CREATE TABLE `blog` (
   `created` date NOT NULL,
   `stato` int(11) NOT NULL,
   `autore` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -63,8 +62,18 @@ CREATE TABLE `campagne` (
   `foto` varchar(100) NOT NULL,
   `stato` int(11) NOT NULL,
   `autore` int(11) NOT NULL,
-  `luogo` varchar(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `luogo` varchar(50) NOT NULL,
+  `latitudine` varchar(255) NOT NULL,
+  `longitudine` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `campagne`
+--
+
+INSERT INTO `campagne` (`id_campagna`, `nome_campagna`, `descrizione`, `giorno_ritrovo`, `foto`, `stato`, `autore`, `luogo`, `latitudine`, `longitudine`) VALUES
+(6, 'Segnalazione a Roma', 'Area di periferia di Roma messa male, piena di rifiuti lasciati dai cittadini', '2024-05-23', 'img-cite-log.jpg, img-cite-reg.jpeg, img-segnala-home.jpg, ', 1, 2, 'Roma, Lazio, Italia', '41.89332030', '12.48293210'),
+(7, 'Area Napoli', 'area in periferia di napoli molto sporca a causa dei cittadini, e brutta da guardare passando.', '2024-05-31', 'img-cite-reg.jpeg, img-segnala-home.jpg, ', 1, 2, 'Napoli, Campania, Italia', '40.83588460', '14.24876790');
 
 -- --------------------------------------------------------
 
@@ -75,15 +84,14 @@ CREATE TABLE `campagne` (
 CREATE TABLE `cod_tokens` (
   `token` varchar(255) NOT NULL,
   `id_user` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dump dei dati per la tabella `cod_tokens`
 --
 
 INSERT INTO `cod_tokens` (`token`, `id_user`) VALUES
-('$2y$10$WO6Em/7BcNdyVhI7ZDshDudFBZRhhjn0mlDA3AUu8SPxZZjVoMOJ.', 3),
-('$2y$10$F3Fd7cg/9K6oOfqxvtfAJuCrA.ksjwF/cmwgUAJ9SwGgrJPDgPQ6a', 4);
+('$2y$10$A4XUbt0jlLYhKs6GbOALIeBKop3Xptn7eeo9syLN.A993oKNc42Ti', 5);
 
 -- --------------------------------------------------------
 
@@ -97,7 +105,7 @@ CREATE TABLE `eventi` (
   `data` date NOT NULL,
   `luogo` varchar(20) NOT NULL,
   `descrizione` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -109,7 +117,7 @@ CREATE TABLE `partecipanti_camapgne` (
   `id_user` int(11) NOT NULL,
   `id_campagna` int(11) NOT NULL,
   `commento` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -122,7 +130,7 @@ CREATE TABLE `partecipanti_eventi` (
   `id_user` int(11) NOT NULL,
   `presente_online` char(8) NOT NULL,
   `recensione` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -139,7 +147,7 @@ CREATE TABLE `utenti` (
   `username` varchar(10) NOT NULL,
   `password` char(60) NOT NULL,
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `utenti`
@@ -148,8 +156,7 @@ CREATE TABLE `utenti` (
 INSERT INTO `utenti` (`id_user`, `nome`, `cognome`, `email`, `num_tel`, `username`, `password`, `created`) VALUES
 (1, 'Mario', 'Rossi', '123456789', 'mariorossi@gm', 'mario79', '$2y$10$xuhFGheXxOe7mwfklOPDEudnyWWbyTnQjMovn8OLINWTDY8xHIh7y', '0000-00-00 00:00:00'),
 (2, 'Mario', 'Rossi', 'mariorossi@gmail.com', '123456789', 'mario79', '$2y$10$13HpRrhAqh7K/gSUbOul6urTNclHJrYIFcv5vJboqQfn74f.Qpgr.', '2024-04-28 19:35:05'),
-(3, 'Anna', 'Verdi', 'annaverdi@gmail.com', '1234567890', 'anna70', '$2y$10$SweKG.kILPtNBVST5LAoXO8P9iQ19GRJOw1/E3MaQ1LNjsIYrF8qW', '2024-04-30 09:13:57'),
-(4, 'Federico', 'Rossi', 'federossi80@gmail.com', '1234567889', 'red80', '$2y$10$hSlouCFi4U7NWfJ2dO.GjuNo2c3qzOlJJFXiiG3BM58n7zS5UwXcm', '2024-04-30 09:27:41');
+(5, 'Anna', 'Verdi', 'annaverdi@gmail.com', '1234567890', 'anna90', '$2y$10$2GcSkCvM6rxBjzNMJAKpIu6IZK5wqGfzRpeQMqCi5MuDytahcp3f.', '2024-04-30 18:42:14');
 
 --
 -- Indici per le tabelle scaricate
@@ -228,7 +235,7 @@ ALTER TABLE `blog`
 -- AUTO_INCREMENT per la tabella `campagne`
 --
 ALTER TABLE `campagne`
-  MODIFY `id_campagna` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_campagna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT per la tabella `eventi`
@@ -240,7 +247,7 @@ ALTER TABLE `eventi`
 -- AUTO_INCREMENT per la tabella `utenti`
 --
 ALTER TABLE `utenti`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Limiti per le tabelle scaricate
