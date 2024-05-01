@@ -1,0 +1,36 @@
+#map {
+    height: 500px;
+}
+
+.container.map-tab{
+    margin: 0;
+    margin-top: 20px;
+}
+
+.col.view-tab{
+    padding: 2%;
+}
+
+.col.view-tab .tab-camps{
+    margin-top: 5%;
+}
+
+.col-8 {
+    align-content: center;
+}
+
+.col-8 #title{
+    font-size: x-large;
+    font-weight: bold;
+    color: green;
+}
+
+.col-4 .btn-warning{
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: white;
+}
+/* .col.view-tab .tab-camps table{
+    margin-top: 3%;
+} */

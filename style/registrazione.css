@@ -37,9 +37,14 @@ form .inputs-r input{
 }
 
 form .inp-l input{
-    width: 50%;
+    /*width: 50%;*/
     margin-top: 5%;
 }
+
+form .inp-l .icon-viewpass{
+    align-content: end;
+}
+
 
 form .inputs-r input:focus{
     border-bottom-color: #563B0E;
@@ -47,6 +52,10 @@ form .inputs-r input:focus{
 
 form .inputs-r .icon-viewpass{
     padding-left: 0px;
+}
+form .inputs-r .icon-viewpass button{
+    background-color: white;
+    border: none;
 }
 
 .sec-cite-reg{

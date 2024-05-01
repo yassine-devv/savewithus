@@ -33,6 +33,7 @@
 .navbar .links a {
     padding: 23px;
     font-size: 15pt;
+    color: black;
 }
 .navbar .links {
     display: flex;
@@ -58,6 +59,11 @@
     color: white;
     font-size: 24pt;
     font-weight:bold;
+}
+
+.main .btn-banner a{
+    color: white;
+    text-decoration: none;
 }
 
 .sec-main{

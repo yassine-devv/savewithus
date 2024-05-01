@@ -1,3 +1,9 @@
+<?php 
+session_start();
+//echo $_COOKIE['remember_user'];
+//echo $_SESSION['iduser'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -28,7 +34,13 @@
             <a href="#">Campagne</a>
             <a href="#">Blog</a>
             <a href="#">Eventi</a>
-            <a href="#">Login</a>
+            <?php 
+            if(isset($_SESSION['iduser'])){
+                echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
+            }else{
+                echo '<a href="login.php">Login</a>';
+            }
+            ?>
         </div>
     </div>
 
@@ -37,7 +49,15 @@
             <div class="row">
                 <div class="col">
                     <span class="citazione"><cite>"Prenditi cura della Terra e la Terra si prenderà cura di te, distruggi la Terra e la Terra ti distruggerà."</cite> </span> <br><br>
-                    <button type="button" class="btn btn-primary btn-lg">Accedi</button>
+                    <button type="button" class="btn btn-primary btn-lg btn-banner">
+                        <?php
+                            if(!isset($_SESSION['iduser'])){
+                                echo '<a href="login.php">Accedi</a>';
+                            }else{
+                                echo '<a href="user.php">Profilo</a>';
+                            }
+                        ?>
+                    </button>
                 </div>
                 <div class="col"></div>
             </div>

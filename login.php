@@ -1,28 +1,28 @@
-<?php 
+<?php
 //session_unset();
 session_start();
 include("./db.php");
 
-if($_SERVER['REQUEST_METHOD'] == "POST"){
+if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $username = $conn->real_escape_string(stripslashes($_POST['username']));
     $password = $conn->real_escape_string(stripslashes($_POST['password']));
 
-    $sql = "SELECT * from utenti WHERE utenti.username='".$username."'";
+    $sql = "SELECT * from utenti WHERE utenti.username='" . $username . "'";
     $ris = $conn->query($sql);
 
-    if($ris->num_rows > 1){
-        while($row = $ris->fetch_assoc()){
-            if(password_verify($password, $row['password'])){
+    if ($ris->num_rows > 1) {
+        while ($row = $ris->fetch_assoc()) {
+            if (password_verify($password, $row['password'])) {
                 //die("password corretta");
 
                 //set cookie per ricordare l'user
-                if(isset($_POST['ricordami'])){
-                    $sqltok = "SELECT * from cod_tokens where cod_tokens.id_user=".$row['id_user'];
+                if (isset($_POST['ricordami'])) {
+                    $sqltok = "SELECT * from cod_tokens where cod_tokens.id_user=" . $row['id_user'];
                     $ristok = $conn->query($sqltok);
 
-                    if($ristok->num_rows > 0){
-                        while($rowtok = $ristok->fetch_assoc()){
-                            setcookie("remember_user", $rowtok['token'], time()+1296000); //cookie per 15 giorni
+                    if ($ristok->num_rows > 0) {
+                        while ($rowtok = $ristok->fetch_assoc()) {
+                            setcookie("remember_user", $rowtok['token'], time() + 1296000); //cookie per 15 giorni
                         }
                     }
                 }
@@ -31,14 +31,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 $_SESSION['username'] = $row['username'];
 
                 header("location: index.php");
-            }else{
-                $err = ' 2 Credenziali non corrette, riprova.'; 
+            } else {
+                $err = 'Credenziali non corrette, riprova.';
             }
         }
-    }else{
-        $err = ' 1 Credenziali non corrette, riprova.'; 
+    } else {
+        $err = 'Credenziali non corrette, riprova.';
     }
-
 }
 
 ?>
@@ -89,15 +88,31 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                 <span class="title">Login</span>
 
                 <form name="form-log" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post" onsubmit="return verify_login()">
-                    <div class="inputs-r inp-l">
-                        <input type="text" placeholder="Username" name="username"> <br>
-                        <input type="password" placeholder="Passowrd" name="password">
+                    <div class="container inputs-r inp-l">
+                        <div class="row">
+                            <div class="col">
+                                <input type="text" placeholder="Username" name="username">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <input type="password" id="inp-pass" placeholder="Passowrd" name="password">
+                            </div>
+                            <div class="col-auto icon-viewpass">
+                                <button id="btn-viewpass" type="button" onclick="viewpass()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" id="icon-eye" class="bi bi-eye-slash-fill" viewBox="0 0 16 16">
+                                        <path d="m10.79 12.912-1.614-1.615a3.5 3.5 0 0 1-4.474-4.474l-2.06-2.06C.938 6.278 0 8 0 8s3 5.5 8 5.5a7 7 0 0 0 2.79-.588M5.21 3.088A7 7 0 0 1 8 2.5c5 0 8 5.5 8 5.5s-.939 1.721-2.641 3.238l-2.062-2.062a3.5 3.5 0 0 0-4.474-4.474z" />
+                                        <path d="M5.525 7.646a2.5 2.5 0 0 0 2.829 2.829zm4.95.708-2.829-2.83a2.5 2.5 0 0 1 2.829 2.829zm3.171 6-12-12 .708-.708 12 12z" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
 
-                    <?php 
-                    if(isset($err)){
-                        echo '<span style="color: red; font-weight: bold">'.$err.'</span>';
+                    <?php
+                    if (isset($err)) {
+                        echo '<span style="color: red; font-weight: bold">' . $err . '</span>';
                     }
                     ?>
 
@@ -111,7 +126,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
                     <span>Non hai un account? <a href="./registrazione.php">Registrati</a></span>
 
                     <br><br>
-            
+
                     <button type="submit" class="btn btn-warning">Entra</button>
                 </form>
             </div>
