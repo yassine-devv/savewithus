@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 4.8.3
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 01, 2024 alle 22:25
--- Versione del server: 10.4.27-MariaDB
--- Versione PHP: 8.1.12
+-- Creato il: Mag 02, 2024 alle 13:59
+-- Versione del server: 10.1.36-MariaDB
+-- Versione PHP: 7.2.11
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -31,7 +32,7 @@ CREATE TABLE `amministratori` (
   `id_admin` int(11) NOT NULL,
   `username` varchar(10) NOT NULL,
   `password` char(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -46,7 +47,7 @@ CREATE TABLE `blog` (
   `created` date NOT NULL,
   `stato` int(11) NOT NULL,
   `autore` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -65,15 +66,16 @@ CREATE TABLE `campagne` (
   `luogo` varchar(50) NOT NULL,
   `latitudine` varchar(255) NOT NULL,
   `longitudine` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `campagne`
 --
 
 INSERT INTO `campagne` (`id_campagna`, `nome_campagna`, `descrizione`, `giorno_ritrovo`, `foto`, `stato`, `autore`, `luogo`, `latitudine`, `longitudine`) VALUES
-(6, 'Segnalazione a Roma', 'Area di periferia di Roma messa male, piena di rifiuti lasciati dai cittadini', '2024-05-23', 'img-cite-log.jpg, img-cite-reg.jpeg, img-segnala-home.jpg, ', 1, 2, 'Roma, Lazio, Italia', '41.89332030', '12.48293210'),
-(7, 'Area Napoli', 'area in periferia di napoli molto sporca a causa dei cittadini, e brutta da guardare passando.', '2024-05-31', 'img-cite-reg.jpeg, img-segnala-home.jpg, ', 1, 2, 'Napoli, Campania, Italia', '40.83588460', '14.24876790');
+(6, 'Segnalazione a Roma', 'Area di periferia di Roma messa male, piena di rifiuti lasciati dai cittadini', '2024-05-23', 'img-cite-log.jpg,img-cite-reg.jpeg,img-segnala-home.jpg, ', 1, 2, 'Roma, Lazio, Italia', '41.89332030', '12.48293210'),
+(7, 'Area Napoli', 'area in periferia di napoli molto sporca a causa dei cittadini, e brutta da guardare passando.', '2024-05-31', 'img-cite-reg.jpeg,img-segnala-home.jpg, ', 1, 2, 'Napoli, Campania, Italia', '40.83588460', '14.24876790'),
+(8, 'Nuova campanga', 'descrizione piccola', '2024-05-25', 'img_banner_camp.jpg,img-cite-log.jpg,img-cite-reg.jpeg, ', 1, 2, 'Milano, Lombardia, Italia', '45.45421190', '9.11135096');
 
 -- --------------------------------------------------------
 
@@ -84,7 +86,7 @@ INSERT INTO `campagne` (`id_campagna`, `nome_campagna`, `descrizione`, `giorno_r
 CREATE TABLE `cod_tokens` (
   `token` varchar(255) NOT NULL,
   `id_user` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dump dei dati per la tabella `cod_tokens`
@@ -105,7 +107,7 @@ CREATE TABLE `eventi` (
   `data` date NOT NULL,
   `luogo` varchar(20) NOT NULL,
   `descrizione` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -117,7 +119,7 @@ CREATE TABLE `partecipanti_camapgne` (
   `id_user` int(11) NOT NULL,
   `id_campagna` int(11) NOT NULL,
   `commento` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -130,7 +132,7 @@ CREATE TABLE `partecipanti_eventi` (
   `id_user` int(11) NOT NULL,
   `presente_online` char(8) NOT NULL,
   `recensione` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -147,7 +149,7 @@ CREATE TABLE `utenti` (
   `username` varchar(10) NOT NULL,
   `password` char(60) NOT NULL,
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dump dei dati per la tabella `utenti`
@@ -235,7 +237,7 @@ ALTER TABLE `blog`
 -- AUTO_INCREMENT per la tabella `campagne`
 --
 ALTER TABLE `campagne`
-  MODIFY `id_campagna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_campagna` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT per la tabella `eventi`
