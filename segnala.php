@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     //prepara la la lista sotto forma di stringa con tutte le foto per memorizzarla nel db
     $str_imgs_path = "";
     for($i=0; $i<count($arr_imgs); $i++){
-        $str_imgs_path .= $arr_imgs[$i] . ", ";
+        $str_imgs_path .= $arr_imgs[$i] . ",";
     }
 
     //echo $str_imgs_path;
@@ -80,6 +80,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 move_uploaded_file($file_tmpname, $filepath);
             }
         }
+
+        header("location: campagne.php");
+        exit;
     }
 
 }
@@ -187,8 +190,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <div class="formbold-main-wrapper">
         <div class="formbold-form-wrapper">
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
-                enctype="multipart/form-data">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active">
