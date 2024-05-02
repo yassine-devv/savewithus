@@ -1,7 +1,7 @@
 <?php
 session_start();
-include("./db.php");
-include("./functions.php");
+include ("./db.php");
+include ("./functions.php");
 prepara_json();
 
 ?>
@@ -17,10 +17,13 @@ prepara_json();
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/campagne.css">
 
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
     <style>
         tr {
@@ -73,16 +76,17 @@ prepara_json();
 
         echo '<script>var lat=' . $data['latitudine'] . '</script>';
         echo '<script>var lon=' . $data['longitudine'] . '</script>';
-    ?>
+        ?>
         <div class="sec-banner">
             <div class="container banner">
                 <div class="row">
                     <div class="col">
                         <span class="nome_cmp">Nome campagna: <?= $data['nome_campagna'] ?> </span> <br><br>
-                        <span class="autore">Autore: <a href="./profile.php?id=<?= $data['id_user'] ?>"> <?= $data['username'] ?></a> </span> <br><br>
+                        <span class="autore">Autore: <a href="./profile.php?id=<?= $data['id_user'] ?>">
+                                <?= $data['username'] ?></a> </span> <br><br>
                     </div>
                     <div class="col"></div>
-                </d iv>
+                </div>
             </div>
         </div>
 
@@ -101,40 +105,44 @@ prepara_json();
                 </div>
             </div>
 
-            <div class="img-slide">
-                <button id="prec">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                        <path d="M15.293 3.293 6.586 12l8.707 8.707 1.414-1.414L9.414 12l7.293-7.293-1.414-1.414z" />
-                    </svg>
-                </button>
+            <div class="sec-img">
+                <div class="img-slide">
+                    <button id="prec">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path d="M15.293 3.293 6.586 12l8.707 8.707 1.414-1.414L9.414 12l7.293-7.293-1.414-1.414z" />
+                        </svg>
+                    </button>
 
-                <img alt="Slider" name="slide">
+                    <img alt="Slider" name="slide">
 
-                <button id="pross">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
-                        <path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
-                    </svg>
-                </button>
+                    <button id="pross">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">
+                            <path d="M7.293 4.707 14.586 12l-7.293 7.293 1.414 1.414L17.414 12 8.707 3.293 7.293 4.707z" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
+            <!--
             <?php
             $arrimgspath = explode(",", $data['foto']);
             array_pop($arrimgspath);
 
             foreach ($arrimgspath as $img) {
-                echo "./uploads/campagne/" . $data['id_campagna'] . "/" . $img." ";
+                echo "./uploads/campagne/" . $data['id_campagna'] . "/" . $img . " ";
 
                 echo '<script>addPathImg("./uploads/campagne/' . $data['id_campagna'] . '/' . $img . '")</script>';
-                
+
                 //echo '<img style="with: 300px; height: 300px" src="./uploads/campagne/' . $data['id_campagna'] . '/' . $img . '" alt="">';
             }
-        ?>
+            ?> -->
+
 
         </div>
-    <?php
+        <?php
         /* var_dump($data); */
     } else {
-    ?>
+        ?>
         <div class="container map-tab">
             <div class="row">
                 <div class="col map">
@@ -150,8 +158,10 @@ prepara_json();
 
                             <button onclick="window.location='segnala.php'" type="button" class="btn btn-warning">
 
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
-                                    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                    class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5m.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2" />
                                 </svg>
 
                                 Segnala
@@ -177,8 +187,9 @@ prepara_json();
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
-                                ?>
-                                        <tr onmouseenter="show_inmap(<?= $row['id_campagna'] ?>)" onclick="window.location='?id=<?= $row['id_campagna'] ?>'">
+                                        ?>
+                                        <tr onmouseenter="show_inmap(<?= $row['id_campagna'] ?>)"
+                                            onclick="window.location='?id=<?= $row['id_campagna'] ?>'">
                                             <td><?= $row['username'] ?></td>
                                             <td><?= $row['nome_campagna'] ?></td>
                                             <td>
@@ -196,7 +207,7 @@ prepara_json();
                                                 ?>
                                             </td>
                                         </tr>
-                                <?php
+                                        <?php
                                     }
                                 }
 
@@ -209,7 +220,7 @@ prepara_json();
                 </div>
             </div>
         </div>
-    <?php
+        <?php
     }
     ?>
 
@@ -222,14 +233,18 @@ prepara_json();
                 <div class="col info-contact">
                     <img src="./imgs/logoswu.png" alt="" width="300" height="100"><br>
                     <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-envelope" viewBox="0 0 16 16">
+                            <path
+                                d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
                         </svg>
                         <span>info@savewithus.com</span>
                     </div>
                     <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd"
+                                d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
                         </svg>
 
                         <span>+39 1234567890</span>
@@ -252,9 +267,13 @@ prepara_json();
 
     <script>
         var pathimgs = [];
-        function addPathImg(pathimg){
+        function addPathImg(pathimg) {
             console.log(pathimg);
             pathimgs.push(pathimg);
+        }
+
+        function getPathImgs(arr) {
+            return arr;
         }
 
         console.log(pathimgs);
@@ -301,61 +320,94 @@ prepara_json();
                     .catch(console.error);
             }
         } else {
+            //carousel
+            /*SLIDESHOW*/
+            let i = 0; //indice iniziale
+            let img = []; //array di immagini
 
-            var map = L.map('mapcmp').setView([lat, lon], 5);
 
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
+            var url_string = window.location.href;
+            var url = new URL(url_string);
+            var c = url.searchParams.get("id");
+            console.log(c);
 
-            var marker = L.marker([lat, lon]).addTo(map);
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let data = JSON.parse(this.response);
+                    console.log(data[0]['campagna']['lat']);
 
-        }
+                    var map = L.map('mapcmp').setView([data[0]['campagna']['lat'], data[0]['campagna']['lon']], 5);
 
-        //carousel
-        /*SLIDESHOW*/
-        let i = 0; //indice iniziale
-        let img = []; //array di immagini
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        maxZoom: 19,
+                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    }).addTo(map);
 
-        //lista di immagini
-        img[0] = "./imgs/calcio_campo.jpg";
-        img[1] = "./imgs/pallavolo_campo.jpg";
-        img[2] = "./imgs/tennis_campo.jpg";
-        document.slide.src = img[i];
+                    var marker = L.marker([data[0]['campagna']['lat'], data[0]['campagna']['lon']]).addTo(map);
 
-        let btnPross = document.getElementById("pross");
-        btnPross.addEventListener("click", prossImg);
+                    let arrimgs = data[0]['campagna']['foto'].split(",");
+                    console.log(arrimgs);
+                    arrimgs.pop();
 
-        let btnPrec = document.getElementById("prec");
-        btnPrec.addEventListener("click", precImg);
+                    for (let j = 0; j < arrimgs.length; j++) {
+                        console.log("./uploads/campagne/" + data[0]['campagna']['id'] + "/" + arrimgs[j]);
+                        img[j] = "./uploads/campagne/" + data[0]['campagna']['id'] + "/" + arrimgs[j];
+                    }
 
-        function prossImg() {
-            //percorre tutte le immagini
-            if (i < img.length - 1) {
-                i++;
-            } else {
-                i = 0;
+                    //lista di immagini
+                    //img[0] = "./imgs/calcio_campo.jpg";
+                    //img[1] = "./imgs/pallavolo_campo.jpg";
+                    //img[2] = "./imgs/tennis_campo.jpg";
+                    document.slide.src = img[i];
+
+                    let btnPross = document.getElementById("pross");
+                    btnPross.addEventListener("click", prossImg);
+
+                    let btnPrec = document.getElementById("prec");
+                    btnPrec.addEventListener("click", precImg);
+                    //console.log(arrimgs.length);
+                }
+            }
+            xmlhttp.open("GET", "functions.php?id_cmp=" + c, true);
+            xmlhttp.send();
+
+            //console.log("1 "+getPathImgs());
+
+            function prossImg() {
+                //percorre tutte le immagini
+                if (i < img.length - 1) {
+                    i++;
+                } else {
+                    i = 0;
+                }
+
+                document.slide.src = img[i];
             }
 
-            document.slide.src = img[i];
-        }
+            function precImg() {
+                //percorre tutte le immagini
+                if (i == 0) {
+                    i = img.length - 1;
+                } else {
+                    i--;
+                }
 
-        function precImg() {
-            //percorre tutte le immagini
-            if (i == 0) {
-                i = img.length - 1;
-            } else {
-                i--;
+                document.slide.src = img[i];
             }
-
-            document.slide.src = img[i];
         }
+
     </script>
 
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 
 
 </body>

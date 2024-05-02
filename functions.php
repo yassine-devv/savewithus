@@ -74,5 +74,36 @@ function prepara_json(){
     }
 }
 
+if(isset($_GET["id_cmp"])){
+    include("./db.php");
+    $id = $_GET["id_cmp"];
+
+    $sql = "SELECT foto, `latitudine`, `longitudine` FROM `campagne` where id_campagna=".$id;
+    $ris = $conn->query($sql);
+
+    if($ris->num_rows > 0){
+        $data = array(); //array che verra messo nel file json
+        while($row = $ris->fetch_assoc()){
+            $item = array(
+                "campagna" => array(
+                    "id" => $id,
+                    "foto" => $row['foto'],
+                    "lat" => $row['latitudine'],
+                    "lon" => $row['longitudine']
+                ),
+            );
+
+            array_push($data, $item);
+
+        }
+        $json = json_encode($data);
+        // Generate json file
+        //file_put_contents("data.json", $json);
+        echo $json;
+    }else{
+        return false;
+    }
+}
+
 ?>
 

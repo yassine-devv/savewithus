@@ -14,14 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $lon = $_POST["lon"];
     $dsp_nm = $_POST["dsp_nm"];
     $data_cmp = $_POST["data-svolg"];
-    
+
     /*file*/
     $rismovfile = false;
     // configura il path della cartella in cui verranno messe le foto
     $upload_dir = 'uploads\campagne' . DIRECTORY_SEPARATOR;
     $allowed_types = array('jpg', 'png', 'jpeg', 'gif'); // array delle estensioni ammesse
     $arr_imgs = [];
-    
+
     // grandezza massima delel immiagini 2MB
     $maxsize = 2 * 1024 * 1024;
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $file_name = $_FILES['files']['name'][$key]; //nome del file
         $file_size = $_FILES['files']['size'][$key]; //grandezza del file
         $file_ext = pathinfo($file_name, PATHINFO_EXTENSION); //estensione del file
-        
+
         // prepara il path della cartella con l'immagine
         $filepath = $upload_dir . $file_name;
 
@@ -41,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             // verifica la grandezza del file
             if ($file_size > $maxsize)
                 echo "Error: Grandezza del file troppo grande";
-                
-                $rismovfile = true;
-                array_push($arr_imgs, $file_name);
+
+            $rismovfile = true;
+            array_push($arr_imgs, $file_name);
 
         } else {
 
@@ -52,31 +52,32 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             echo "({$file_ext} file type is not allowed)<br / >";
         }
     }
-    
+
     //prepara la la lista sotto forma di stringa con tutte le foto per memorizzarla nel db
     $str_imgs_path = "";
-    for($i=0; $i<count($arr_imgs); $i++){
+    for ($i = 0; $i < count($arr_imgs); $i++) {
         $str_imgs_path .= $arr_imgs[$i] . ",";
     }
 
     //echo $str_imgs_path;
 
-    $sql = "INSERT INTO `campagne`(`nome_campagna`, `descrizione`, `giorno_ritrovo`, `foto`, `stato`, `autore`, `luogo`, `latitudine`, `longitudine`) VALUES ('" . $nome_cmp . "','" . $desc_cmp . "','" . $data_cmp . "','".$str_imgs_path."','1','".$_SESSION['iduser']."','".$dsp_nm."','".$lat."','".$lon."')";
+    $sql = "INSERT INTO `campagne`(`nome_campagna`, `descrizione`, `giorno_ritrovo`, `foto`, `stato`, `autore`, `luogo`, `latitudine`, `longitudine`) VALUES ('" . $nome_cmp . "','" . $desc_cmp . "','" . $data_cmp . "','" . $str_imgs_path . "','1','" . $_SESSION['iduser'] . "','" . $dsp_nm . "','" . $lat . "','" . $lon . "')";
     $result = $conn->query($sql);
-    
-    if($result){
+
+    if ($result) {
         $last_id = $conn->insert_id; // id dell'ultimo elemento inserito
 
-        $path_dir_id = 'uploads/campagne/'.$last_id;
+        $path_dir_id = 'uploads/campagne/' . $last_id;
         //se la cartella con nome id della campagna non esiste la crea
         if (!file_exists($path_dir_id)) {
             mkdir($path_dir_id, 0777, true);
         }
-        
-        if($rismovfile){
+
+        if ($rismovfile) {
             foreach ($_FILES['files']['tmp_name'] as $key => $value) {
                 $file_tmpname = $_FILES['files']['tmp_name'][$key];
-                $filepath = $path_dir_id.DIRECTORY_SEPARATOR.$_FILES['files']['name'][$key];;
+                $filepath = $path_dir_id . DIRECTORY_SEPARATOR . $_FILES['files']['name'][$key];
+                ;
                 move_uploaded_file($file_tmpname, $filepath);
             }
         }
@@ -190,7 +191,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
     <div class="formbold-main-wrapper">
         <div class="formbold-form-wrapper">
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
+                enctype="multipart/form-data">
                 <div class="formbold-steps">
                     <ul>
                         <li class="formbold-step-menu1 active">
@@ -333,6 +335,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
         });
 
+        //https://nominatim.openstreetmap.org/reverse?format=json&lat=45.4640818899535&lon=9.189596264423086&zoom=18&addressdetails=1 prende json con tutti dati e nome della posizione
+
         function chooseAddr(lat1, lng1, dsp_name) {
             myMarker.closePopup();
             map.setView([lat1, lng1], 18);
@@ -348,6 +352,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             console.log(lon);
             myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
         }
+
+        let marker = null;
+        map.on('click', (event) => {
+            if (marker !== null) {
+                map.removeLayer(marker);
+            }
+            marker = L.marker([event.latlng.lat, event.latlng.lng]).addTo(map);
+            console.log(event.latlng.lat+" "+event.latlng.lng);
+        })
 
         function myFunction(arr) {
 
