@@ -47,58 +47,63 @@
     align-content: center;
 }
 
-.sec-banner .nome_cmp{
+.sec-banner .nome_cmp {
     text-align: left;
     color: white;
     font-size: 24pt;
-    font-weight:bold;
+    font-weight: bold;
 }
-.sec-banner .autore{
+
+.sec-banner .autore {
     text-align: left;
     color: white;
     font-size: 17pt;
 }
-.sec-banner .autore a{
+
+.sec-banner .autore a {
     text-decoration: none;
 }
-.sec-banner p{
+
+.sec-banner p {
     text-align: left;
     color: white;
     font-size: 17pt;
-    font-weight:bold;
+    font-weight: bold;
 }
 
-.sec-banner .btn-banner a{
+.sec-banner .btn-banner a {
     color: white;
     text-decoration: none;
 }
 
-.sec-main{
+.sec-main {
     padding: 4%;
 }
+
 .sec-main p {
     text-align: left;
     font-size: large;
 }
+
 .sec-main p b {
     font-size: large;
 }
 
-#mapcmp{
+#mapcmp {
     height: 400px;
 }
 
-.sec-main .col-4{
+.sec-main .col-4 {
     padding: 5%;
 }
 
-.sec-main .col-4 button{
+.sec-main .col-4 button {
     float: left;
 }
 
 /*slides*/
 
-.img-slide{
+.img-slide {
     margin-top: 5%;
     background-color: grey;
     width: 50%;
@@ -108,13 +113,13 @@
     margin-right: auto;
 }
 
-.img-slide img{
+.img-slide img {
     width: 65%;
     max-height: 400px;
     margin: auto;
 }
 
-.img-slide button{
+.img-slide button {
     width: 100%;
     height: 100%;
     margin: auto;
@@ -122,11 +127,54 @@
     background-color: grey;
 }
 
-.img-slide button:hover{
+.img-slide button:hover {
     background-color: rgb(163, 160, 160);
 }
 
-.img-slide svg{
+.img-slide svg {
     fill: white;
     background-color: grey;
+}
+
+/*sec tabs*/
+
+/* Style the tab */
+.sec-tabs {
+    margin-top: 3%;
+}
+
+.sec-tabs .tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+.sec-tabs .tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+.sec-tabs .tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+.sec-tabs .tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.sec-tabs .tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
 }

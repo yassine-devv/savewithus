@@ -15,6 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (password_verify($password, $row['password'])) {
                 //die("password corretta");
 
+                /*
                 //set cookie per ricordare l'user
                 if (isset($_POST['ricordami'])) {
                     $sqltok = "SELECT * from cod_tokens where cod_tokens.id_user=" . $row['id_user'];
@@ -25,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             setcookie("remember_user", $rowtok['token'], time() + 1296000); //cookie per 15 giorni
                         }
                     }
-                }
+                }*/
 
                 $_SESSION['iduser'] = $row['id_user'];
                 $_SESSION['username'] = $row['username'];
