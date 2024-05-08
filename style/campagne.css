@@ -25,6 +25,13 @@
     font-weight: bold;
     color: green;
 }
+.col-4 .btn-danger  {
+    padding: 10px;
+    padding-left: 15px;
+    padding-right: 15px;
+    color: white;
+    display: inline-flex;
+}
 
 .col-4 .btn-warning {
     padding: 10px;
