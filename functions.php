@@ -1,11 +1,12 @@
-<?php 
+<?php
 //include("./db.php");
 
 
 $giorni = ['Lunedi', 'Martedi', 'Mercoledi', 'Giovedi', 'Venerdi', 'Sabato', 'Domenica'];
-$mesi = ["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giungo","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre",];
+$mesi = ["Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giungo", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre",];
 
-function getmonth($month){
+function getmonth($month)
+{
 
     global $mesi;
 
@@ -18,7 +19,7 @@ function getmonth($month){
         "06" => $mesi[5],
         "07" => $mesi[6],
         "08" => $mesi[7],
-        "08" => $mesi[8],
+        "09" => $mesi[8],
         "10" => $mesi[9],
         "11" => $mesi[10],
         "12" => $mesi[11],
@@ -27,33 +28,35 @@ function getmonth($month){
     return $m[$month];
 }
 
-function giorni($giorno){
+function giorni($giorno)
+{
 
     global $giorni;
 
     $g = [
-        "01" => $giorni[0],    
-        "02" => $giorni[1],    
-        "03" => $giorni[2],    
-        "04" => $giorni[3],    
-        "05" => $giorni[4],    
-        "06" => $giorni[5],    
-        "07" => $giorni[6],    
+        "01" => $giorni[0],
+        "02" => $giorni[1],
+        "03" => $giorni[2],
+        "04" => $giorni[3],
+        "05" => $giorni[4],
+        "06" => $giorni[5],
+        "07" => $giorni[6],
     ];
 
     return $g[$giorno];
 }
 
-function prepara_json(){
-    include("./db.php");
+function prepara_json()
+{
+    include ("./db.php");
 
     //prendo dati
     $sql = "SELECT `id_campagna`, `nome_campagna`, `luogo`, `latitudine`, `longitudine` FROM `campagne`";
     $ris = $conn->query($sql);
 
-    if($ris->num_rows > 0){
+    if ($ris->num_rows > 0) {
         $data = array(); //array che verra messo nel file json
-        while($row = $ris->fetch_assoc()){
+        while ($row = $ris->fetch_assoc()) {
             $item = array(
                 "campagna" => array(
                     "id" => $row["id_campagna"],
@@ -70,13 +73,13 @@ function prepara_json(){
         $json = json_encode($data);
         // Generate json file
         file_put_contents("data.json", $json);
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET["id_cmp"])){
-    include("./db.php");
+if (isset($_GET["id_cmp"])) {
+    include ("./db.php");
     $id = $_GET["id_cmp"];
     
     $sql = "SELECT foto, `latitudine`, `longitudine` FROM `campagne` where id_campagna=".$id;
@@ -84,7 +87,7 @@ if(isset($_GET["id_cmp"])){
     
     if($ris->num_rows > 0){
         $data = array(); //array che verra messo nel file json
-        while($row = $ris->fetch_assoc()){
+        while ($row = $ris->fetch_assoc()) {
             $item = array(
                 "campagna" => array(
                     "id" => $id,
@@ -101,61 +104,50 @@ if(isset($_GET["id_cmp"])){
         // Generate json file
         //file_put_contents("data.json", $json);
         echo $json;
-    }else{
+    } else {
         return false;
     }
 }
 
-if(isset($_GET['id_camp']) && isset($_GET['view_tab'])){
-    include("./db.php");
+if (isset($_GET['iscrizione'])) {
+    session_start();
+    include ('./db.php');
 
-
-    $id = $_GET['id_camp'];
-    $tab = $_GET['view_tab'];
-
-    if($tab == "Commenti"){
-        $sql = "SELECT campagne.giorno_ritrovo, utenti.username, campagne.id_campagna, campagne.nome_campagna, partecipanti_camapgne.id_user, partecipanti_camapgne.id_campagna, partecipanti_camapgne.commento, IFNULL(partecipanti_camapgne.commento, 1) as commento_disp from utenti join partecipanti_camapgne on utenti.id_user=partecipanti_camapgne.id_user join campagne on partecipanti_camapgne.id_campagna=campagne.id_campagna where partecipanti_camapgne.id_campagna=".$id;
+    $resp = [];
+    
+    if (isset($_SESSION['iduser'])) {
+        $sql = "INSERT INTO `partecipanti_camapgne`(`id_user`, `id_campagna`) VALUES (" . $_SESSION['iduser'] . "," . $_GET['iscrizione'] . ")";
         $ris = $conn->query($sql);
-        
-        if($ris->num_rows > 0){
-            
-            
-            while($row = $ris->fetch_assoc()){
 
-                $datacmp = strtotime($row['giorno_ritrovo']);
-                
-                if($datacmp > date("Y-m-d")){
-                    echo "<span>La sezione dei commenti non è disponibile perche' l'evento non si e' ancora tenuto!</span>";
-                    return;
-                }else{
-                    if($row['commento_disp']!=="1"){
-                        echo $row['username']." ".$row['commento'];
-                        return;
-                    }
-                }
-
-            }
-        }else{
-            return false;
+        if ($ris) {
+            $resp = ['result' => true, 'msg' => "Iscrizione alla campagna avvenuta con successo!"];
+        } else {
+            $resp = ['result' => false, 'msg' => "Errore durante l'iscrizione, riprova!"];
         }
+        
+    } else {
+        $resp = ['result' => "0", 'msg' => "Per iscriverti alla campagna, esegui il login!"];
     }
     
+    //echo $resp;
+    echo json_encode($resp);
+    //echo $_SESSION['iduser'];
 }
 
-if(isset($_GET['id_camp_iscriviti'])){
+if (isset($_GET['annulla'])) {
     session_start();
-    echo $_SESSION['iduser'];
+    include ('./db.php');
     
-    $sql = "INSERT INTO `partecipanti_camapgne`(`id_user`, `id_campagna`) VALUES (".$_SESSION['iduser'].",".$_GET['id_camp_iscriviti'].")";
-    $ris = $conn->query($sql);
+    $sql = "DELETE FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=".$_SESSION['iduser']." and partecipanti_camapgne.id_campagna=".$_GET['annulla'];
     
-    if($ris){
-        echo "Iscrizione alla campagna avvenuta con successo!";
-    }else{
-        echo "Errore durante l'iscrizione riprova piu tardi.";
+    $resp = [];
+    if ($conn->query($sql) === TRUE) {
+        $resp = ['result' => true, 'msg' => "Iscrizione annullata con successo!"];
+    } else {
+        $resp = ['result' => false, 'msg' => "Errore, riprova!"];
     }
-    
+    echo json_encode($resp);
+
 }
 
 ?>
-

@@ -97,7 +97,29 @@ prepara_json();
                         <p><b>Descrizione area: </b><?= $data['descrizione'] ?></p>
                         <p><b>Luogo: </b><?= $data['luogo'] ?></p>
                         <p><b>Stato: </b><?= $data['stato'] ?></p>
-                        <button type="button" class="btn btn-success" onclick="iscriviti_evento()">Iscriviti alla campagna</button>
+                        <?php
+                        $sql = "SELECT * FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=" . $_SESSION['iduser'] . " and partecipanti_camapgne.id_campagna=" . $_GET['id'];
+                        $ris = $conn->query($sql);
+
+                        if ($ris->num_rows > 0) {
+                            ?>
+                            <button type="button" class="btn btn-danger" onclick="azioni_campagna('annulla', '<?= $_GET['id'] ?>')">
+                                Annulla iscrizione
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-x" viewBox="0 0 16 16">
+                                    <path
+                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                </svg>
+                            </button>
+                            <?php
+                        } else {
+                            ?>
+                            <button id="iscr_cmp" type="button" class="btn btn-warning"
+                                onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
+                            <?php
+                        }
+                        ?>
+
                     </div>
                 </div>
             </div>
@@ -206,7 +228,6 @@ prepara_json();
                             </tbody>
                         </table>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -246,10 +267,6 @@ prepara_json();
             </div>
         </div>
     </footer>
-
-
-
-
 
     <script>
         var pathimgs = [];
@@ -383,46 +400,54 @@ prepara_json();
                 document.slide.src = img[i];
             }
 
-
-            function openCity(evt, view) {
+            function azioni_campagna(azione, id){
                 var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
+                xmlhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
+                        let data = JSON.parse(this.response);
 
-                        var i, tabcontent, tablinks;
-                        tabcontent = document.getElementsByClassName("tabcontent");
+                        if(azione == 'iscrizione'){
+                            console.log(data);
+    
+                            if (data['result'] == true) {
+                                alert(data['msg']);
+                                let oldbtn = document.querySelector(".col-4 .btn-warning");
+                                oldbtn.remove();
+        
+                                let btniscr = '<button type="button" class="btn btn-danger" onclick="azioni_campagna(\'annulla\', '+c+')">Annulla iscrizione<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" /></svg></button>';
+                                document.querySelector(".col-4").innerHTML += btniscr;
+                            }
+                            
+                            if (data['result'] == false) {
+                                alert(data['msg']);
+                            }
+                            if (data['result'] == "0") {
+                                location.replace("login.php");
+                            }
+                        }
+                        
+                        if(azione=="annulla"){
+                            if (data['result'] == true) {
+                                alert(data['msg']);
+                                let oldbtn = document.querySelector(".col-4 .btn-danger");
+                                oldbtn.remove();
 
-                        for (i = 0; i < tabcontent.length; i++) {
-                            tabcontent[i].style.display = "none";
+                                let btniscr = '<button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna(\'iscrizione\', '+c+')">Iscriviti alla campagna</button>';
+                                document.querySelector(".col-4").innerHTML += btniscr;
+
+                            }
                         }
 
-                        tablinks = document.getElementsByClassName("tablinks");
-
-                        for (i = 0; i < tablinks.length; i++) {
-                            tablinks[i].className = tablinks[i].className.replace(" active", "");
-                        }
-
-                        document.getElementById(view).innerHTML = this.response;
-                        document.getElementById(view).style.display = "block";
-                        evt.currentTarget.className += " active";
                     }
+
                 }
-                xmlhttp.open("GET", "functions.php?id_camp=" + c + "&view_tab=" + view, true);
+                xmlhttp.open("GET", "functions.php?"+azione+"=" + id, true);
                 xmlhttp.send();
             }
-            document.getElementById("defaultOpen").click();
 
-            function iscriviti_evento() {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        console.log(this.response);
-                    }
-                }
-                xmlhttp.open("GET", "functions.php?id_camp_iscriviti=" + c , true);
-                xmlhttp.send();
-            }
         }
+
+
     </script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
