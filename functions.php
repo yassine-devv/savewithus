@@ -147,6 +147,55 @@ if (isset($_GET['annulla'])) {
         $resp = ['result' => false, 'msg' => "Errore, riprova!"];
     }
     echo json_encode($resp);
+    
+}
+
+if(isset($_GET['Commenti'])){
+    session_start();
+    include ('./db.php');
+    
+    $sql = "SELECT campagne.giorno_ritrovo, partecipanti_camapgne.id_user,partecipanti_camapgne.id_campagna, partecipanti_camapgne.commento, utenti.username FROM campagne join partecipanti_camapgne on campagne.id_campagna=partecipanti_camapgne.id_campagna join utenti on partecipanti_camapgne.id_user=utenti.id_user WHERE partecipanti_camapgne.id_campagna=" . $_GET['Commenti'];
+    $ris = $conn->query($sql);
+    
+    $resp = [];
+    
+    $datadisp = false;
+    if ($ris->num_rows > 0) {
+        $data = [];
+        while($row = $ris->fetch_assoc()){
+            if($row['giorno_ritrovo'] >= date("Y-m-d")){ //controllo se l'evento è stato fatto o meno
+                $datadisp = true;
+                array_push($data, $row);
+            }else{
+                $resp = ['result' => false, 'msg' => "Commenti ancora non disponibili!"];
+                echo json_encode($resp);
+                return;
+            }
+        }
+        if($datadisp){
+            $data['result'] = true;
+            echo json_encode($data);
+        }
+    } else {
+        $resp = ['result' => false, 'msg' => "Nessun commento disponibile!"];
+        echo json_encode($resp);
+    }
+}
+
+if(isset($_GET['addcomment']) && isset($_GET['id'])){
+    session_start();
+    include ('./db.php');
+    
+    $sql = "UPDATE partecipanti_camapgne SET partecipanti_camapgne.commento='".$_GET['addcomment']."' WHERE partecipanti_camapgne.id_campagna=".$_GET['id']." and partecipanti_camapgne.id_user=".$_SESSION['iduser'];
+    
+    $resp = [];
+    if ($conn->query($sql) === TRUE) {
+        $resp = ['result' => true, 'msg' => "Commento inserito con successo"];
+    } else {
+        $resp = ['result' => false, 'msg' => "Errore durante l'inserimento"];
+    }
+    
+    echo json_encode($resp);
 
 }
 

@@ -102,21 +102,18 @@ prepara_json();
                         $ris = $conn->query($sql);
 
                         if ($ris->num_rows > 0) {
-                            ?>
+                        ?>
                             <button type="button" class="btn btn-danger" onclick="azioni_campagna('annulla', '<?= $_GET['id'] ?>')">
                                 Annulla iscrizione
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
-                                    class="bi bi-x" viewBox="0 0 16 16">
-                                    <path
-                                        d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
                                 </svg>
                             </button>
-                            <?php
+                        <?php
                         } else {
-                            ?>
-                            <button id="iscr_cmp" type="button" class="btn btn-warning"
-                                onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
-                            <?php
+                        ?>
+                            <button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
+                        <?php
                         }
                         ?>
 
@@ -144,12 +141,18 @@ prepara_json();
 
             <div class="sec-tabs">
                 <div class="tab">
-                    <button class="tablinks" onclick="openCity(event, 'Commenti')" id="defaultOpen">Commenti</button>
-                    <button class="tablinks" onclick="openCity(event, 'Partecipanti')">Partecipanti</button>
+                    <button class="tablinks" onclick="openTab(event, 'Commenti')" id="defaultOpen">Commenti</button>
+                    <button class="tablinks" onclick="openTab(event, 'Partecipanti')">Partecipanti</button>
                 </div>
 
-                <div id="Commenti" class="tabcontent"></div>
-                <div id="Partecipanti" class="tabcontent"></div>
+                <div id="Commenti" class="tabcontent">
+                    
+                    <div class="addcomment">
+                        <input type="text" name="commento" id="inp-commento">
+                        <button type="button" onclick="addcomment()" class="btn btn-primary">Primary</button>
+                    </div>
+                </div>
+                <div id="Partecipanti" class="tabcontent">ciao</div>
 
             </div>
 
@@ -400,24 +403,24 @@ prepara_json();
                 document.slide.src = img[i];
             }
 
-            function azioni_campagna(azione, id){
+            function azioni_campagna(azione, id) {
                 var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function () {
+                xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
                         let data = JSON.parse(this.response);
 
-                        if(azione == 'iscrizione'){
+                        if (azione == 'iscrizione') {
                             console.log(data);
-    
+
                             if (data['result'] == true) {
                                 alert(data['msg']);
                                 let oldbtn = document.querySelector(".col-4 .btn-warning");
                                 oldbtn.remove();
-        
-                                let btniscr = '<button type="button" class="btn btn-danger" onclick="azioni_campagna(\'annulla\', '+c+')">Annulla iscrizione<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" /></svg></button>';
+
+                                let btniscr = '<button type="button" class="btn btn-danger" onclick="azioni_campagna(\'annulla\', ' + c + ')">Annulla iscrizione<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" /></svg></button>';
                                 document.querySelector(".col-4").innerHTML += btniscr;
                             }
-                            
+
                             if (data['result'] == false) {
                                 alert(data['msg']);
                             }
@@ -425,14 +428,14 @@ prepara_json();
                                 location.replace("login.php");
                             }
                         }
-                        
-                        if(azione=="annulla"){
+
+                        if (azione == "annulla") {
                             if (data['result'] == true) {
                                 alert(data['msg']);
                                 let oldbtn = document.querySelector(".col-4 .btn-danger");
                                 oldbtn.remove();
 
-                                let btniscr = '<button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna(\'iscrizione\', '+c+')">Iscriviti alla campagna</button>';
+                                let btniscr = '<button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna(\'iscrizione\', ' + c + ')">Iscriviti alla campagna</button>';
                                 document.querySelector(".col-4").innerHTML += btniscr;
 
                             }
@@ -441,13 +444,76 @@ prepara_json();
                     }
 
                 }
-                xmlhttp.open("GET", "functions.php?"+azione+"=" + id, true);
+                xmlhttp.open("GET", "functions.php?" + azione + "=" + id, true);
                 xmlhttp.send();
             }
 
         }
 
+        function openTab(evt, tabName) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
 
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the button that opened the tab
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    let data = JSON.parse(this.response);
+                    
+                    console.log(data);
+                    console.log(Object.keys(data).length--);
+                    
+                    
+                    
+                    if (data['result'] == false) {
+                        document.getElementById(tabName).innerHTML += data['msg'];
+                    }
+                    
+                    if (data['result'] == true) {
+                        let count = Object.keys(data).length - 1;
+                        //console.log(data[0]['username']);
+                        for (let i = 0; i < count; i++) {
+
+                            document.getElementById(tabName).innerHTML += "<span>"+data[i]['username']+": "+data[i]['commento']+"</span><br>";
+                        }
+                    }
+                    
+                }
+            }
+            xmlhttp.open("GET", "functions.php?" + tabName + "=" + c, true);
+            xmlhttp.send();
+        }
+        document.getElementById("defaultOpen").click();
+        
+        function addcomment(){
+            let comment = document.getElementById('inp-commento').value;
+            if(comment.length !== 0){
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let data = JSON.parse(this.response);
+                        alert(data['msg']);
+                    }
+                }
+                xmlhttp.open("GET", "functions.php?id="+c+"&addcomment=" + comment, true);
+                xmlhttp.send();
+            }
+        }
     </script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
