@@ -1,0 +1,26 @@
+body, html{
+    height: 100%;
+}
+
+.right-banner {
+    padding: 2%;
+    background-color: gray;
+    width: 17%;
+    height: 100%;
+    display: block;
+}
+
+/* .right-banner ul {
+    list-style-type:none;
+    margin-left: 0;
+}
+.right-banner ul li{
+    margin-bottom: 1%;
+} */
+
+.right-banner a{
+    text-decoration: none;
+    color: white;
+
+    font-size: large;
+}
