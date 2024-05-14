@@ -96,6 +96,7 @@ prepara_json();
                     <div class="col-4">
                         <p><b>Descrizione area: </b><?= $data['descrizione'] ?></p>
                         <p><b>Luogo: </b><?= $data['luogo'] ?></p>
+                        <p><b>Data: </b><?= $data['giorno_ritrovo'] ?></p>
                         <p><b>Stato: </b><?= $data['stato'] ?></p>
                         <?php
                         $sql = "SELECT * FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=" . $_SESSION['iduser'] . " and partecipanti_camapgne.id_campagna=" . $_GET['id'];
@@ -146,10 +147,11 @@ prepara_json();
                 </div>
 
                 <div id="Commenti" class="tabcontent">
-                    
                     <div class="addcomment">
+                        <label>Pubblica un commento:</label><br>
+                        <!-- <textarea name="commento" id="inp-commento"></textarea> -->
                         <input type="text" name="commento" id="inp-commento">
-                        <button type="button" onclick="addcomment()" class="btn btn-primary">Primary</button>
+                        <button type="button" onclick="addcomment()" class="btn btn-primary">Primary</button><br><br>
                     </div>
                 </div>
                 <div id="Partecipanti" class="tabcontent">ciao</div>

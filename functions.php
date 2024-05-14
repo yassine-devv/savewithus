@@ -185,14 +185,34 @@ if(isset($_GET['Commenti'])){
 if(isset($_GET['addcomment']) && isset($_GET['id'])){
     session_start();
     include ('./db.php');
+    //vedere prima se l'utente è loggato, se iscritto, se l'evento è stato tneuto
+
+    if(isset($_SESSION['iduser'])){
+        $sql = "SELECT campagne.id_campagna, campagne.giorno_ritrovo, partecipanti_camapgne.id_user, partecipanti_camapgne.id_campagna, partecipanti_camapgne.commento FROM partecipanti_camapgne join campagne on partecipanti_camapgne.id_campagna=campagne.id_campagna where partecipanti_camapgne.id_user=".$_SESSION['iduser']." and partecipanti_camapgne.id_campagna=".$_GET['id'];
+        $ris = $conn->query($sql);
     
-    $sql = "UPDATE partecipanti_camapgne SET partecipanti_camapgne.commento='".$_GET['addcomment']."' WHERE partecipanti_camapgne.id_campagna=".$_GET['id']." and partecipanti_camapgne.id_user=".$_SESSION['iduser'];
-    
-    $resp = [];
-    if ($conn->query($sql) === TRUE) {
-        $resp = ['result' => true, 'msg' => "Commento inserito con successo"];
-    } else {
-        $resp = ['result' => false, 'msg' => "Errore durante l'inserimento"];
+        if($ris->num_rows > 0){ //utente iscritto alla campagna
+            while($row=$ris->fetch_assoc()){
+                if($row['giorno_ritrovo'] <= date("Y-m-d")){ //controllo se l'evento è stato fatto o meno
+                    $sql = "UPDATE partecipanti_camapgne SET partecipanti_camapgne.commento='".$_GET['addcomment']."' WHERE partecipanti_camapgne.id_campagna=".$_GET['id']." and partecipanti_camapgne.id_user=".$_SESSION['iduser'];
+                    
+                    $resp = [];
+                    if ($conn->query($sql) === TRUE) {
+                        $resp = ['result' => true, 'msg' => "Commento inserito con successo"];
+                    } else {
+                        $resp = ['result' => false, 'msg' => "Errore durante l'inserimento"];
+                    }
+                }else{
+                    $resp = ['result' => false, 'msg' => "Impossibile aggiungere un commento perchè l'evento non è ancora stato tenuto."];
+                    echo json_encode($resp);
+                    return;
+                }
+            }
+        }else{
+            $resp = ['result' => false, 'msg' => "Eseguire prima l'iscrizione alla campagna"];
+        }
+    }else{
+        $resp = ['result' => false, 'msg' => "Eseguire prima l'accesso per aggiungere un commento"];
     }
     
     echo json_encode($resp);
