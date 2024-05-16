@@ -1,0 +1,32 @@
+body, html{
+    height: 100%;
+    background-color: #a7d9b5;
+    margin: 0;
+    align-content: center;
+    font-family: "Roboto", sans-serif;
+}
+
+.div-inps{
+    background-color: aliceblue;
+    padding: 3%;
+    margin-left: auto;
+    margin-right: auto;
+    width: 25%;
+    border-radius: 20px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+}
+
+.div-inps form{
+    display: grid;
+    margin: auto;
+    justify-content: center;
+}
+.div-inps form h3{
+    margin-bottom: 20px;
+}
+.div-inps form input{
+    padding: 10px;
+    font-size: medium;
+    border-radius: 20px;
+    border: 1px solid grey;
+}

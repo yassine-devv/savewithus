@@ -151,10 +151,11 @@ prepara_json();
                         <label>Pubblica un commento:</label><br>
                         <!-- <textarea name="commento" id="inp-commento"></textarea> -->
                         <input type="text" name="commento" id="inp-commento">
-                        <button type="button" onclick="addcomment()" class="btn btn-primary">Primary</button><br><br>
+                        <button type="button" onclick="addcomment()" class="btn btn-primary">Pubblica</button><br><br>
                     </div>
+                    <div id="content"></div>
                 </div>
-                <div id="Partecipanti" class="tabcontent">ciao</div>
+                <div id="Partecipanti" class="tabcontent"></div>
 
             </div>
 
@@ -478,22 +479,40 @@ prepara_json();
                     let data = JSON.parse(this.response);
                     
                     console.log(data);
-                    console.log(Object.keys(data).length--);
                     
-                    
-                    
-                    if (data['result'] == false) {
-                        document.getElementById(tabName).innerHTML += data['msg'];
-                    }
-                    
-                    if (data['result'] == true) {
-                        let count = Object.keys(data).length - 1;
-                        //console.log(data[0]['username']);
-                        for (let i = 0; i < count; i++) {
-
-                            document.getElementById(tabName).innerHTML += "<span>"+data[i]['username']+": "+data[i]['commento']+"</span><br>";
+                    if(tabName=="Commenti"){
+                        document.getElementById("content").innerHTML = "";
+                        console.log(Object.keys(data).length--);
+                        if (data['result'] == false) {
+                            document.getElementById("content").innerHTML += data['msg'];
+                        }
+                        
+                        if (data['result'] == true) {
+                            let count = Object.keys(data).length - 1;
+                            //console.log(data[0]['username']);
+                            for (let i = 0; i < count; i++) {
+                                
+                                document.getElementById("content").innerHTML += "<span>"+data[i]['username']+": "+data[i]['commento']+"</span><br>";
+                            }
                         }
                     }
+                    
+                    if(tabName=="Partecipanti"){
+                        document.getElementById(tabName).innerHTML = "";
+                        if(data['result']==false){
+                            document.getElementById(tabName).innerHTML += data["msg"];
+                        }
+
+                        if(data['result']==true){
+                            let count = Object.keys(data).length - 1;
+                            //console.log(data[0]['username']);
+                            for (let i = 0; i < count; i++) {
+                                document.getElementById(tabName).innerHTML += "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">"+data['data'][i]['username']+"</h5><a class=\"card-link\" href='profile.php?id="+data['data'][i]['id']+"'>Profilo</a></div></div>";
+                            }
+
+                        }
+                    }
+                    
                     
                 }
             }
@@ -510,6 +529,7 @@ prepara_json();
                     if (this.readyState == 4 && this.status == 200) {
                         let data = JSON.parse(this.response);
                         alert(data['msg']);
+                        window.location='campagne.php?id='+c;
                     }
                 }
                 xmlhttp.open("GET", "functions.php?id="+c+"&addcomment=" + comment, true);
