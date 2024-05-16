@@ -8,33 +8,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $username = $conn->real_escape_string(stripslashes($_POST['username']));
     $password = $conn->real_escape_string(stripslashes($_POST['password']));
 
-    echo $_POST['ricordami'];
+    /* echo $_POST['ricordami']; */
 
     $sql = "SELECT * from utenti WHERE utenti.username='" . $username . "'";
     $ris = $conn->query($sql);
 
-    if ($ris->num_rows > 1) {
+    if ($ris->num_rows > 0) {
         while ($row = $ris->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
-                //die("password corretta");
-                //set cookie per ricordare l'user
-                /*
-                if (!empty($_POST['ricordami'])) {
-                    $sqltok = "SELECT * from cod_tokens where cod_tokens.id_user=" . $row['id_user'];
-                    $ristok = $conn->query($sqltok);
-
-                    if ($ristok->num_rows > 0) {
-                        while ($rowtok = $ristok->fetch_assoc()) {
-                            echo $rowtok['token'];
-                            setcookie("token_ricorda", $rowtok['token'], time() + (10 * 365 * 24 * 60 * 60));
-                            //setcookie("remember_user", $rowtok['token'], time() + 1296000); //cookie per 15 giorni
-                        }
-                    }
-                } else {
-                    if (isset($_COOKIE["token_ricorda"])) {
-                        setcookie("token_ricorda", "");
-                    }
-                }*/
 
                 $_SESSION['iduser'] = $row['id_user'];
                 $_SESSION['username'] = $row['username'];
@@ -124,6 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                             </div>
                         </div>
                     </div>
+                    <br>
 
 
                     <?php
@@ -134,8 +116,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                     <br>
 
-                    <input type="checkbox" name="ricordami" value="ricordami">
-                    <label>Ricordami</label>
+                    <!-- <input type="checkbox" name="ricordami" value="ricordami">
+                    <label>Ricordami</label> -->
 
                     <br><br>
 
