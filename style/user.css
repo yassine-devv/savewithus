@@ -1,0 +1,51 @@
+.navbar{
+    width: 88%;
+    margin-right: auto;
+}
+
+.nav-right{
+    display: block;
+    background-color: rgb(250, 250, 251);
+    padding: 3%;
+    width: 12%;
+
+    position: fixed; 
+    top:0px; 
+    left: 0%; 
+    bottom: 0px;
+}
+.nav-right .links-profile{
+    display: block;
+    margin-top: 30%;
+}
+
+.nav-right .links-profile a{
+    text-decoration: none;
+    color: black;
+    /*font-weight: ;*/
+    display: block;
+    margin-left: 10px;
+    margin-top: 15px;
+    font-size: 13pt;
+    width: 100%;
+}
+ .nav-right .links-profile div .active{
+    font-weight: bold;
+}
+
+ .nav-right .btn-loggout{
+    font-size: large;
+    padding: 10px;
+    text-decoration: none;
+    background-color: red;
+    border-radius: 5px;
+    border: none;
+    position: fixed;
+    bottom: 3%;
+    left: 3%;
+    z-index:1;
+}
+ .nav-right .btn-loggout a{
+    text-decoration: none;
+    color: white;
+}

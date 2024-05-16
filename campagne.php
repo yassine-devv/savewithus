@@ -82,8 +82,19 @@ prepara_json();
                 <div class="row">
                     <div class="col">
                         <span class="nome_cmp">Nome campagna: <?= $data['nome_campagna'] ?> </span> <br><br>
-                        <span class="autore">Autore: <a href="./profile.php?id=<?= $data['id_user'] ?>">
-                                <?= $data['username'] ?></a> </span> <br><br>
+                        <span class="autore">Autore: 
+                            <?php
+                            if($data['id_user']==$_SESSION['iduser']){
+                                ?>
+                                <a href="./user.php"><?= $data['username'] ?></a> 
+                                <?php
+                            }else{
+                                ?>
+                                <a href="./user.php?id=<?= $data['id_user'] ?>"><?= $data['username'] ?></a> 
+                                <?php
+                            }
+                            ?>
+                        </span> <br><br>
                     </div>
                     <div class="col"></div>
                 </div>
