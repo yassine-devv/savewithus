@@ -1,34 +1,36 @@
-body, html{
+body,
+html {
     height: 100%;
     font-family: "Roboto", sans-serif;
     margin: 0;
 
 }
 
-.all{
+.all {
     display: flex;
     justify-content: center;
     width: 100%;
     height: 100%;
 }
 
-.right-banner{
+.right-banner {
     display: block;
     background-color: rgb(250, 250, 251);
     padding: 3%;
-    width:17%;
-    
-    position: fixed; 
-    top:0px; 
-    left: 0%; 
+    width: 17%;
+
+    position: fixed;
+    top: 0px;
+    left: 0%;
     bottom: 0px;
-    z-index:1;
+    z-index: 1;
 }
-.right-banner div{
+
+.right-banner div {
     margin-top: 50px;
 }
 
-.right-banner div .link-ban{
+.right-banner div .link-ban {
     font-size: larger;
     margin-top: 2%;
     text-decoration: none;
@@ -39,6 +41,76 @@ body, html{
     width: 77%;
     margin-left: auto;
 }
+
+.main .dati_profilo {
+    height: 100%;
+    padding: 5%;
+}
+
+.main .dati_profilo .privilegi {
+    padding: 2%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: 30%;
+    margin-top: 2%;
+    margin-left: 2%;
+}
+
+.main .dati_profilo .dati {
+    padding: 2%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    width: 30%;
+    margin-top: 2%;
+}
+/* 
+.main .dati_profilo .privilegi .switch {
+    font-size: medium;
+    position: relative;
+    display: inline-block;
+    width: 62px;
+    height: 35px;
+}
+
+.main .dati_profilo .privilegi .switch input {
+    opacity: 1;
+    width: 0;
+    height: 0;
+}
+
+.main .dati_profilo .privilegi .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0px;
+    background: #fff;
+    transition: .4s;
+    border-radius: 30px;
+    border: 1px solid #ccc;
+}
+
+.main .dati_profilo .privilegi .slider:before {
+    position: absolute;
+    content: "";
+    height: 1.9em;
+    width: 1.9em;
+    border-radius: 16px;
+    left: 1.2px;
+    top: 0;
+    bottom: 0;
+    background-color: white;
+    box-shadow: 0 2px 5px #999999;
+    transition: .4s;
+}
+
+.main .dati_profilo .privilegi input:checked+.slider {
+    background-color: #5fdd54;
+    border: 1px solid transparent;
+}
+
+.main .dati_profilo .privilegi input:checked+.slider:before {
+    transform: translateX(1.5em);
+} */
 
 /* .right { grid-area: banner; }
 .main { grid-area: main; }

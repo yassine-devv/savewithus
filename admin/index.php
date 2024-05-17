@@ -1,6 +1,8 @@
 <?php
 session_start();
 include ("../db.php");
+include ("./pages.php");
+
 
 if (!isset($_SESSION['idamm'])) {
     header("Location: login.php");
@@ -16,6 +18,8 @@ if (!isset($_SESSION['idamm'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Amministratore</title>
     <link rel="stylesheet" href="./style/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
 
 </head>
 
@@ -34,7 +38,13 @@ if (!isset($_SESSION['idamm'])) {
             </div>
         </div>
         <div class="main">
-    ciao
+            <?php 
+            if(isset($_GET['page'])){
+                get_page($_GET['page']);
+            }else{
+                get_page('dati_profilo');
+            }
+            ?>
         </div>
     </div>
 
