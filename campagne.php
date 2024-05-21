@@ -4,6 +4,10 @@ include("./db.php");
 include("./functions.php");
 prepara_json();
 
+if(!isset($_SESSION['iduser'])){
+    header("Location: login.php");
+}
+
 ?>
 
 <!DOCTYPE html>
