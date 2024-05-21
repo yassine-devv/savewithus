@@ -31,9 +31,9 @@ session_start();
         </div>
         <div class="links">
             <a href="./index.php">Home</a>
-            <a href="#">Campagne</a>
-            <a href="#">Blog</a>
-            <a href="#">Eventi</a>
+            <a href="campagne.php">Campagne</a>
+            <a href="blog.php">Blog</a>
+            <a href="eventi.php">Eventi</a>
             <?php 
             if(isset($_SESSION['iduser'])){
                 echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
