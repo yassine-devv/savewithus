@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.3
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 02, 2024 alle 13:59
--- Versione del server: 10.1.36-MariaDB
--- Versione PHP: 7.2.11
+-- Creato il: Mag 22, 2024 alle 21:55
+-- Versione del server: 10.4.27-MariaDB
+-- Versione PHP: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -31,8 +30,19 @@ SET time_zone = "+00:00";
 CREATE TABLE `amministratori` (
   `id_admin` int(11) NOT NULL,
   `username` varchar(10) NOT NULL,
-  `password` char(60) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `password` char(60) NOT NULL,
+  `azione_utenti` char(5) DEFAULT NULL,
+  `azione_campagne` char(5) DEFAULT NULL,
+  `azione_blog` char(5) DEFAULT NULL,
+  `azione_eventi` char(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `amministratori`
+--
+
+INSERT INTO `amministratori` (`id_admin`, `username`, `password`, `azione_utenti`, `azione_campagne`, `azione_blog`, `azione_eventi`) VALUES
+(1, 'admin', '$2y$10$nBR97QjHJoTGCL2Hnapmoe4KTy31LFMm39VdrXoLUfDNMm1DzxiPy', 'true', 'false', 'false', 'true');
 
 -- --------------------------------------------------------
 
@@ -47,7 +57,7 @@ CREATE TABLE `blog` (
   `created` date NOT NULL,
   `stato` int(11) NOT NULL,
   `autore` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -66,7 +76,7 @@ CREATE TABLE `campagne` (
   `luogo` varchar(50) NOT NULL,
   `latitudine` varchar(255) NOT NULL,
   `longitudine` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `campagne`
@@ -86,14 +96,15 @@ INSERT INTO `campagne` (`id_campagna`, `nome_campagna`, `descrizione`, `giorno_r
 CREATE TABLE `cod_tokens` (
   `token` varchar(255) NOT NULL,
   `id_user` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dump dei dati per la tabella `cod_tokens`
 --
 
 INSERT INTO `cod_tokens` (`token`, `id_user`) VALUES
-('$2y$10$A4XUbt0jlLYhKs6GbOALIeBKop3Xptn7eeo9syLN.A993oKNc42Ti', 5);
+('$2y$10$A4XUbt0jlLYhKs6GbOALIeBKop3Xptn7eeo9syLN.A993oKNc42Ti', 5),
+('$2y$10$6mZJGWv/IXTUAsljRwX9TunJTTMF8dOhzGGl9oNQjssrU7I2pWG.u', 6);
 
 -- --------------------------------------------------------
 
@@ -107,7 +118,7 @@ CREATE TABLE `eventi` (
   `data` date NOT NULL,
   `luogo` varchar(20) NOT NULL,
   `descrizione` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -118,8 +129,16 @@ CREATE TABLE `eventi` (
 CREATE TABLE `partecipanti_camapgne` (
   `id_user` int(11) NOT NULL,
   `id_campagna` int(11) NOT NULL,
-  `commento` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `commento` varchar(100) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `partecipanti_camapgne`
+--
+
+INSERT INTO `partecipanti_camapgne` (`id_user`, `id_campagna`, `commento`) VALUES
+(2, 6, NULL),
+(2, 7, NULL);
 
 -- --------------------------------------------------------
 
@@ -132,7 +151,7 @@ CREATE TABLE `partecipanti_eventi` (
   `id_user` int(11) NOT NULL,
   `presente_online` char(8) NOT NULL,
   `recensione` varchar(300) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -149,7 +168,7 @@ CREATE TABLE `utenti` (
   `username` varchar(10) NOT NULL,
   `password` char(60) NOT NULL,
   `created` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `utenti`
@@ -158,7 +177,8 @@ CREATE TABLE `utenti` (
 INSERT INTO `utenti` (`id_user`, `nome`, `cognome`, `email`, `num_tel`, `username`, `password`, `created`) VALUES
 (1, 'Mario', 'Rossi', '123456789', 'mariorossi@gm', 'mario79', '$2y$10$xuhFGheXxOe7mwfklOPDEudnyWWbyTnQjMovn8OLINWTDY8xHIh7y', '0000-00-00 00:00:00'),
 (2, 'Mario', 'Rossi', 'mariorossi@gmail.com', '123456789', 'mario79', '$2y$10$13HpRrhAqh7K/gSUbOul6urTNclHJrYIFcv5vJboqQfn74f.Qpgr.', '2024-04-28 19:35:05'),
-(5, 'Anna', 'Verdi', 'annaverdi@gmail.com', '1234567890', 'anna90', '$2y$10$2GcSkCvM6rxBjzNMJAKpIu6IZK5wqGfzRpeQMqCi5MuDytahcp3f.', '2024-04-30 18:42:14');
+(5, 'Anna', 'Verdi', 'annaverdi@gmail.com', '1234567890', 'anna90', '$2y$10$2GcSkCvM6rxBjzNMJAKpIu6IZK5wqGfzRpeQMqCi5MuDytahcp3f.', '2024-04-30 18:42:14'),
+(6, 'Federico', 'Sala', 'federicosala@gmail.com', '1234567890', 'fede80', '$2y$10$K6dZ86ruM5v1UGznfb948.wLluBT1L7LsPZ2wJgNCOry4gUB90t2W', '2024-05-02 21:58:38');
 
 --
 -- Indici per le tabelle scaricate
@@ -225,7 +245,7 @@ ALTER TABLE `utenti`
 -- AUTO_INCREMENT per la tabella `amministratori`
 --
 ALTER TABLE `amministratori`
-  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_admin` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT per la tabella `blog`
@@ -249,7 +269,7 @@ ALTER TABLE `eventi`
 -- AUTO_INCREMENT per la tabella `utenti`
 --
 ALTER TABLE `utenti`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- Limiti per le tabelle scaricate

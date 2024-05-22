@@ -26,8 +26,9 @@ if (!isset($_SESSION['idamm'])) {
 <body>
     <div class="all">
         <div class="right-banner">
-            <img src="../imgs/logoswu.png" alt="Logo SaveWithUs" width="300">
-            <h1>Amministratore</h1>
+            <img src="../imgs/logoswu.png" alt="Logo SaveWithUs" width="250">
+            <br><br>
+            <h3>Amministratore</h3>
             <div>
                 <a class="link-ban" href="index.php">Dati profilo</a><br><br>
                 <a class="link-ban" href="index.php?page=profili">Profili</a><br><br>
