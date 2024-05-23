@@ -62,6 +62,13 @@ html {
     width: 30%;
     margin-top: 2%;
 }
+
+.main .tabl-utenti{
+    height: 100%;
+    padding: 5%;
+
+}
+
 /* 
 .main .dati_profilo .privilegi .switch {
     font-size: medium;
