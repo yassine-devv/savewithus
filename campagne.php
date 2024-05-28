@@ -113,25 +113,36 @@ if(!isset($_SESSION['iduser'])){
                         <p><b>Luogo: </b><?= $data['luogo'] ?></p>
                         <p><b>Data: </b><?= $data['giorno_ritrovo'] ?></p>
                         <p><b>Stato: </b><?= $data['stato'] ?></p>
+                        
                         <?php
-                        $sql = "SELECT * FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=" . $_SESSION['iduser'] . " and partecipanti_camapgne.id_campagna=" . $_GET['id'];
+                        $sql = "SELECT campagne.id_campagna, campagne.autore FROM campagne WHERE campagne.id_campagna=".$_GET['id']." and campagne.autore=".$_SESSION['iduser'];
                         $ris = $conn->query($sql);
 
-                        if ($ris->num_rows > 0) {
-                        ?>
-                            <button type="button" class="btn btn-danger" onclick="azioni_campagna('annulla', '<?= $_GET['id'] ?>')">
-                                Annulla iscrizione
-                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
-                                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
-                                </svg>
-                            </button>
-                        <?php
-                        } else {
-                        ?>
-                            <button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
-                        <?php
+                        if($ris->num_rows !== 1) {
+                            $sql = "SELECT * FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=" . $_SESSION['iduser'] . " and partecipanti_camapgne.id_campagna=" . $_GET['id'];
+                            $ris = $conn->query($sql);
+    
+                            if ($ris->num_rows > 0) {
+                            ?>
+                                <button type="button" class="btn btn-danger" onclick="azioni_campagna('annulla', '<?= $_GET['id'] ?>')">
+                                    Annulla iscrizione
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                                        <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+                                    </svg>
+                                </button>
+                            <?php
+                            } else {
+                            ?>
+                                <button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
+                                <?php
+                            }
+                        }else{
+                            ?>
+                            <button type="button" class="btn btn-info" onclick="console.log('ciao')">Modifica campagna</button>
+                            <?php
                         }
                         ?>
+
 
                     </div>
                 </div>
@@ -255,6 +266,10 @@ if(!isset($_SESSION['iduser'])){
     <?php
     }
     ?>
+    
+    <div class="box-modify-camp">
+        ciao
+    </div>
 
 
 
@@ -380,10 +395,6 @@ if(!isset($_SESSION['iduser'])){
                         img[j] = "./uploads/campagne/" + data[0]['campagna']['id'] + "/" + arrimgs[j];
                     }
 
-                    //lista di immagini
-                    //img[0] = "./imgs/calcio_campo.jpg";
-                    //img[1] = "./imgs/pallavolo_campo.jpg";
-                    //img[2] = "./imgs/tennis_campo.jpg";
                     document.slide.src = img[i];
 
                     let btnPross = document.getElementById("pross");
@@ -391,13 +402,11 @@ if(!isset($_SESSION['iduser'])){
 
                     let btnPrec = document.getElementById("prec");
                     btnPrec.addEventListener("click", precImg);
-                    //console.log(arrimgs.length);
                 }
             }
             xmlhttp.open("GET", "functions.php?id_cmp=" + c, true);
             xmlhttp.send();
 
-            //console.log("1 "+getPathImgs());
 
             function prossImg() {
                 //percorre tutte le immagini

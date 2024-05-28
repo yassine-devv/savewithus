@@ -238,12 +238,13 @@ if(isset($_GET['Partecipanti'])){
     $ris = $conn->query($sql);
     
     if($ris->num_rows > 0){
+        $resp['data'] = array();
+        $resp['result'] = false;
         while($row = $ris->fetch_assoc()){
-            $resp['data'] = array();
-            if($row['id_user']!==$_SESSION['iduser']){
-                array_push($resp['result'], true);
+            //if($row['id_user']!==$_SESSION['iduser']){
+                $resp['result'] = true;
                 array_push($resp['data'], ["id"=> $row['id_user'], "username"=> $row['username']]);
-            }
+            //}
             //$resp = ['result' => true, 'msg' => "Nessun volontario al momento iscritto in questa campagna"];
         }
     }else{
