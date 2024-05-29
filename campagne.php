@@ -138,7 +138,7 @@ if(!isset($_SESSION['iduser'])){
                             }
                         }else{
                             ?>
-                            <button type="button" class="btn btn-info" onclick="console.log('ciao')">Modifica campagna</button>
+                            <button type="button" class="btn btn-info" onclick="view_tab_mod()">Modifica campagna</button>
                             <?php
                         }
                         ?>
@@ -268,11 +268,12 @@ if(!isset($_SESSION['iduser'])){
     ?>
     
     <div class="box-modify-camp">
-        ciao
+        <span id="title">MODIFICA CAMPAGNA</span><br>
+        <span style="color: red">*Attenzione non è possibile modificare immagini e luogo della campagna*</span>
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+            
+        </form>
     </div>
-
-
-
 
     <footer>
         <div class="container">
@@ -304,7 +305,7 @@ if(!isset($_SESSION['iduser'])){
         </div>
     </footer>
 
-    <script>
+    <!-- <script>
         var pathimgs = [];
 
         function addPathImg(pathimg) {
@@ -560,7 +561,9 @@ if(!isset($_SESSION['iduser'])){
                 xmlhttp.send();
             }
         }
-    </script>
+    </script> -->
+
+    <script src="./js/campagne.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
