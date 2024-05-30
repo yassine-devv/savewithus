@@ -51,7 +51,7 @@ function prepara_json()
     include ("./db.php");
 
     //prendo dati
-    $sql = "SELECT `id_campagna`, `nome_campagna`, `luogo`, `latitudine`, `longitudine` FROM `campagne`";
+    $sql = "SELECT `id_campagna`, `nome_campagna`, `luogo`, `latitudine`, `longitudine`, stato FROM `campagne`";
     $ris = $conn->query($sql);
 
     if ($ris->num_rows > 0) {
@@ -61,6 +61,7 @@ function prepara_json()
                 "campagna" => array(
                     "id" => $row["id_campagna"],
                     "nome_campagna" => $row['nome_campagna'],
+                    "stato" => $row["stato"],
                     "luogo" => $row['luogo'],
                     "lat" => $row['latitudine'],
                     "lon" => $row['longitudine']

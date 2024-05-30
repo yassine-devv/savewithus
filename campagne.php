@@ -4,9 +4,13 @@ include("./db.php");
 include("./functions.php");
 prepara_json();
 
-if(!isset($_SESSION['iduser'])){
+if (!isset($_SESSION['iduser'])) {
     header("Location: login.php");
 }
+
+//if (isset($_GET['id'])){
+
+//}
 
 ?>
 
@@ -46,10 +50,10 @@ if(!isset($_SESSION['iduser'])){
             <a href="campagne.php">Campagne</a>
             <a href="blog.php">Blog</a>
             <a href="eventi.php">Eventi</a>
-            <?php 
-            if(isset($_SESSION['iduser'])){
-                echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
-            }else{
+            <?php
+            if (isset($_SESSION['iduser'])) {
+                echo '<a href="user.php">Ciao, ' . $_SESSION['username'] . '</a>';
+            } else {
                 echo '<a href="login.php">Login</a>';
             }
             ?>
@@ -59,6 +63,24 @@ if(!isset($_SESSION['iduser'])){
     <?php
     if (isset($_GET['id'])) {
         $id = $_GET['id'];
+
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            if (isset($_POST['modifica-camp'])) {
+                $nome_cmp = $_POST['nome-camp'];
+                $desc_cmp = $_POST['descrzione-camp'];
+                $data_cmp = $_POST['data-camp'];
+
+                $sql = "UPDATE `campagne` SET nome_campagna='" . $nome_cmp . "', descrizione='" . $desc_cmp . "', giorno_ritrovo='" . $data_cmp . "' WHERE campagne.id_campagna=" . $id;
+                //$result = $conn->query($sql);
+
+                if ($result = $conn->query($sql)) {
+                    echo '<script>alert("Modifica avvenuta con successo")</script>';
+                }
+
+                //header("location campagne.php?id=".$id);
+            }
+        }
+
         $sql = "SELECT utenti.id_user, utenti.username, campagne.id_campagna, campagne.nome_campagna, campagne.descrizione, campagne.giorno_ritrovo, campagne.foto, campagne.stato, campagne.autore, campagne.luogo, campagne.latitudine, campagne.longitudine FROM utenti join campagne on utenti.id_user=campagne.autore WHERE campagne.id_campagna=" . $id;
         $ris = $conn->query($sql);
 
@@ -83,16 +105,16 @@ if(!isset($_SESSION['iduser'])){
                 <div class="row">
                     <div class="col">
                         <span class="nome_cmp">Nome campagna: <?= $data['nome_campagna'] ?> </span> <br><br>
-                        <span class="autore">Autore: 
+                        <span class="autore">Autore:
                             <?php
-                            if($data['id_user']==$_SESSION['iduser']){
-                                ?>
-                                <a href="./user.php"><?= $data['username'] ?></a> 
-                                <?php
-                            }else{
-                                ?>
-                                <a href="./user.php?id=<?= $data['id_user'] ?>"><?= $data['username'] ?></a> 
-                                <?php
+                            if ($data['id_user'] == $_SESSION['iduser']) {
+                            ?>
+                                <a href="./user.php"><?= $data['username'] ?></a>
+                            <?php
+                            } else {
+                            ?>
+                                <a href="./user.php?id=<?= $data['id_user'] ?>"><?= $data['username'] ?></a>
+                            <?php
                             }
                             ?>
                         </span> <br><br>
@@ -112,18 +134,32 @@ if(!isset($_SESSION['iduser'])){
                         <p><b>Descrizione area: </b><?= $data['descrizione'] ?></p>
                         <p><b>Luogo: </b><?= $data['luogo'] ?></p>
                         <p><b>Data: </b><?= $data['giorno_ritrovo'] ?></p>
-                        <p><b>Stato: </b><?= $data['stato'] ?></p>
-                        
+                        <p><b>Stato: </b>
+                            <?php
+                            switch ($data['stato']) {
+                                case '1':
+                                    echo "In validazione";
+                                    break;
+                                case '2':
+                                    echo "In attesa";
+                                    break;
+                                case '0':
+                                    echo "In corso";
+                                    break;
+                            }
+                            ?>
+                        </p>
+
                         <?php
-                        $sql = "SELECT campagne.id_campagna, campagne.autore FROM campagne WHERE campagne.id_campagna=".$_GET['id']." and campagne.autore=".$_SESSION['iduser'];
+                        $sql = "SELECT campagne.id_campagna, campagne.autore FROM campagne WHERE campagne.id_campagna=" . $_GET['id'] . " and campagne.autore=" . $_SESSION['iduser'];
                         $ris = $conn->query($sql);
 
-                        if($ris->num_rows !== 1) {
+                        if ($ris->num_rows !== 1) {
                             $sql = "SELECT * FROM `partecipanti_camapgne` WHERE partecipanti_camapgne.id_user=" . $_SESSION['iduser'] . " and partecipanti_camapgne.id_campagna=" . $_GET['id'];
                             $ris = $conn->query($sql);
-    
+
                             if ($ris->num_rows > 0) {
-                            ?>
+                        ?>
                                 <button type="button" class="btn btn-danger" onclick="azioni_campagna('annulla', '<?= $_GET['id'] ?>')">
                                     Annulla iscrizione
                                     <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
@@ -134,12 +170,12 @@ if(!isset($_SESSION['iduser'])){
                             } else {
                             ?>
                                 <button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna('iscrizione', '<?= $_GET['id'] ?>')">Iscriviti alla campagna</button>
-                                <?php
+                            <?php
                             }
-                        }else{
+                        } else {
                             ?>
                             <button type="button" class="btn btn-info" onclick="view_tab_mod()">Modifica campagna</button>
-                            <?php
+                        <?php
                         }
                         ?>
 
@@ -232,26 +268,29 @@ if(!isset($_SESSION['iduser'])){
 
                                 if ($result->num_rows > 0) {
                                     while ($row = $result->fetch_assoc()) {
+                                        if ($row['stato']!=='1') {
                                 ?>
-                                        <tr onmouseenter="show_inmap(<?= $row['id_campagna'] ?>)" onclick="window.location='?id=<?= $row['id_campagna'] ?>'">
-                                            <td><?= $row['username'] ?></td>
-                                            <td><?= $row['nome_campagna'] ?></td>
-                                            <td>
-                                                <?php
-                                                switch ($row['stato']) {
-                                                    case '2':
-                                                        echo 'In attesa';
-                                                        break;
-                                                    case '3':
-                                                        echo 'Terminata';
-                                                        break;
-                                                    default:
-                                                        echo $row['stato'];
-                                                }
-                                                ?>
-                                            </td>
-                                        </tr>
+                                            <tr onmouseenter="show_inmap(<?= $row['id_campagna'] ?>)" onclick="window.location='?id=<?= $row['id_campagna'] ?>'">
+                                                <td><?= $row['username'] ?></td>
+                                                <td><?= $row['nome_campagna'] ?></td>
+                                                <td>
+                                                    <?php
+                                                    switch ($row['stato']) {
+                                                        case '2':
+                                                            echo 'In attesa';
+                                                            break;
+                                                        case '3':
+                                                            echo 'Terminata';
+                                                            break;
+                                                        default:
+                                                            echo $row['stato'];
+                                                    }
+                                                    ?>
+                                                </td>
+                                            </tr>
                                 <?php
+
+                                        }
                                     }
                                 }
 
@@ -266,13 +305,49 @@ if(!isset($_SESSION['iduser'])){
     <?php
     }
     ?>
-    
+
     <div class="box-modify-camp">
-        <span id="title">MODIFICA CAMPAGNA</span><br>
+        <div class="top">
+            <span id="title">MODIFICA CAMPAGNA</span><br>
+            <svg onclick="close_box()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+            </svg>
+        </div>
         <span style="color: red">*Attenzione non è possibile modificare immagini e luogo della campagna*</span>
-        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
-            
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) . "?id=" . $id ?>" method="post">
+            <div>
+                <label>Nome campagna:</label>
+                <input type="text" name="nome-camp" value="<?php echo $data['nome_campagna'] ?>">
+                <label>Descrizone:</label>
+                <textarea name="descrzione-camp"><?php echo $data['descrizione'] ?></textarea>
+                <!-- <input type="text" value="<?php echo $data['descrizione'] ?>" > -->
+                <label>Giorno ritrovo:</label>
+                <input type="date" name="data-camp" value="<?php echo $data['giorno_ritrovo'] ?>">
+            </div>
+            <input type="submit" class="btn btn-primary" name="modifica-camp" value="Conferma">
+
         </form>
+    </div>
+
+    <!-- modal -->
+    <div id="box-msg" class="modal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Modal body text goes here.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <footer>
@@ -304,264 +379,6 @@ if(!isset($_SESSION['iduser'])){
             </div>
         </div>
     </footer>
-
-    <!-- <script>
-        var pathimgs = [];
-
-        function addPathImg(pathimg) {
-            console.log(pathimg);
-            pathimgs.push(pathimg);
-        }
-
-        function getPathImgs(arr) {
-            return arr;
-        }
-
-        console.log(pathimgs);
-
-        console.log(document.body.contains(document.getElementById("mapcmp")))
-
-        if (document.body.contains(document.getElementById("map"))) {
-            var map = L.map('map').setView([41.459, 12.700], 5);
-
-            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                maxZoom: 19,
-                attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            }).addTo(map);
-
-            const req = new Request("data.json");
-
-            fetch(req)
-                .then((response) => response.json())
-                .then((data) => {
-                    console.log(data[0]['campagna']['id']);
-
-                    for (var i = 0; i < data.length; i++) {
-                        var marker = L.marker([data[i]['campagna']['lat'], data[i]['campagna']['lon']]).addTo(map);
-                        //marker.bindPopup("<b>" + data[i]['campagna']['nome_campagna'] + "</b>").openPopup();
-                    }
-                })
-                .catch(console.error);
-
-
-            function show_inmap(id) {
-                fetch(req)
-                    .then((response) => response.json())
-                    .then((data) => {
-                        console.log(data[0]['campagna']['id']);
-                        for (var i = 0; i < data.length; i++) {
-                            if (data[i]['campagna']['id'] == id) {
-                                var popup = L.popup()
-                                    .setLatLng([data[i]['campagna']['lat'], data[i]['campagna']['lon']])
-                                    .setContent(data[i]['campagna']['nome_campagna'])
-                                    .openOn(map);
-                            }
-                        }
-                    })
-                    .catch(console.error);
-            }
-        } else {
-            //carousel
-            /*SLIDESHOW*/
-            let i = 0; //indice iniziale
-            let img = []; //array di immagini
-
-
-            var url_string = window.location.href;
-            var url = new URL(url_string);
-            var c = url.searchParams.get("id");
-            console.log(c);
-
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    let data = JSON.parse(this.response);
-                    console.log(data[0]['campagna']['lat']);
-
-                    var map = L.map('mapcmp').setView([data[0]['campagna']['lat'], data[0]['campagna']['lon']], 5);
-
-                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                        maxZoom: 19,
-                        attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    }).addTo(map);
-
-                    var marker = L.marker([data[0]['campagna']['lat'], data[0]['campagna']['lon']]).addTo(map);
-
-                    let arrimgs = data[0]['campagna']['foto'].split(",");
-                    console.log(arrimgs);
-                    arrimgs.pop();
-
-                    for (let j = 0; j < arrimgs.length; j++) {
-                        console.log("./uploads/campagne/" + data[0]['campagna']['id'] + "/" + arrimgs[j]);
-                        img[j] = "./uploads/campagne/" + data[0]['campagna']['id'] + "/" + arrimgs[j];
-                    }
-
-                    document.slide.src = img[i];
-
-                    let btnPross = document.getElementById("pross");
-                    btnPross.addEventListener("click", prossImg);
-
-                    let btnPrec = document.getElementById("prec");
-                    btnPrec.addEventListener("click", precImg);
-                }
-            }
-            xmlhttp.open("GET", "functions.php?id_cmp=" + c, true);
-            xmlhttp.send();
-
-
-            function prossImg() {
-                //percorre tutte le immagini
-                if (i < img.length - 1) {
-                    i++;
-                } else {
-                    i = 0;
-                }
-
-                document.slide.src = img[i];
-            }
-
-            function precImg() {
-                //percorre tutte le immagini
-                if (i == 0) {
-                    i = img.length - 1;
-                } else {
-                    i--;
-                }
-
-                document.slide.src = img[i];
-            }
-
-            function azioni_campagna(azione, id) {
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        let data = JSON.parse(this.response);
-
-                        if (azione == 'iscrizione') {
-                            console.log(data);
-
-                            if (data['result'] == true) {
-                                alert(data['msg']);
-                                let oldbtn = document.querySelector(".col-4 .btn-warning");
-                                oldbtn.remove();
-
-                                let btniscr = '<button type="button" class="btn btn-danger" onclick="azioni_campagna(\'annulla\', ' + c + ')">Annulla iscrizione<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" /></svg></button>';
-                                document.querySelector(".col-4").innerHTML += btniscr;
-                            }
-
-                            if (data['result'] == false) {
-                                alert(data['msg']);
-                            }
-                            if (data['result'] == "0") {
-                                location.replace("login.php");
-                            }
-                        }
-
-                        if (azione == "annulla") {
-                            if (data['result'] == true) {
-                                alert(data['msg']);
-                                let oldbtn = document.querySelector(".col-4 .btn-danger");
-                                oldbtn.remove();
-
-                                let btniscr = '<button id="iscr_cmp" type="button" class="btn btn-warning" onclick="azioni_campagna(\'iscrizione\', ' + c + ')">Iscriviti alla campagna</button>';
-                                document.querySelector(".col-4").innerHTML += btniscr;
-
-                            }
-                        }
-
-                    }
-
-                }
-                xmlhttp.open("GET", "functions.php?" + azione + "=" + id, true);
-                xmlhttp.send();
-            }
-
-        }
-
-        function openTab(evt, tabName) {
-            // Declare all variables
-            var i, tabcontent, tablinks;
-
-            // Get all elements with class="tabcontent" and hide them
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-
-            // Get all elements with class="tablinks" and remove the class "active"
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-
-            // Show the current tab, and add an "active" class to the button that opened the tab
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    let data = JSON.parse(this.response);
-                    
-                    console.log(data);
-                    
-                    if(tabName=="Commenti"){
-                        document.getElementById("content").innerHTML = "";
-                        console.log(Object.keys(data).length--);
-                        if (data['result'] == false) {
-                            document.getElementById("content").innerHTML += data['msg'];
-                        }
-                        
-                        if (data['result'] == true) {
-                            let count = Object.keys(data).length - 1;
-                            //console.log(data[0]['username']);
-                            for (let i = 0; i < count; i++) {
-                                
-                                document.getElementById("content").innerHTML += "<span>"+data[i]['username']+": "+data[i]['commento']+"</span><br>";
-                            }
-                        }
-                    }
-                    
-                    if(tabName=="Partecipanti"){
-                        document.getElementById(tabName).innerHTML = "";
-                        if(data['result']==false){
-                            document.getElementById(tabName).innerHTML += data["msg"];
-                        }
-
-                        if(data['result']==true){
-                            let count = Object.keys(data).length - 1;
-                            //console.log(data[0]['username']);
-                            for (let i = 0; i < count; i++) {
-                                document.getElementById(tabName).innerHTML += "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">"+data['data'][i]['username']+"</h5><a class=\"card-link\" href='profile.php?id="+data['data'][i]['id']+"'>Profilo</a></div></div>";
-                            }
-
-                        }
-                    }
-                    
-                    
-                }
-            }
-            xmlhttp.open("GET", "functions.php?" + tabName + "=" + c, true);
-            xmlhttp.send();
-        }
-        document.getElementById("defaultOpen").click();
-        
-        function addcomment(){
-            let comment = document.getElementById('inp-commento').value;
-            if(comment.length !== 0){
-                var xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        let data = JSON.parse(this.response);
-                        alert(data['msg']);
-                        window.location='campagne.php?id='+c;
-                    }
-                }
-                xmlhttp.open("GET", "functions.php?id="+c+"&addcomment=" + comment, true);
-                xmlhttp.send();
-            }
-        }
-    </script> -->
 
     <script src="./js/campagne.js"></script>
 

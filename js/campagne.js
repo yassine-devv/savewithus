@@ -29,20 +29,23 @@ if (document.body.contains(document.getElementById("map"))) {
             console.log(data[0]['campagna']['id']);
 
             for (var i = 0; i < data.length; i++) {
-                var marker = L.marker([data[i]['campagna']['lat'], data[i]['campagna']['lon']]).addTo(map);
+                if(data[i]['campagna']['stato']!=="1"){
+                    var marker = L.marker([data[i]['campagna']['lat'], data[i]['campagna']['lon']]).addTo(map);
+                }
                 //marker.bindPopup("<b>" + data[i]['campagna']['nome_campagna'] + "</b>").openPopup();
             }
         })
         .catch(console.error);
-
-
-    function show_inmap(id) {
-        fetch(req)
+        
+        
+        function show_inmap(id) {
+            fetch(req)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data[0]['campagna']['id']);
                 for (var i = 0; i < data.length; i++) {
                     if (data[i]['campagna']['id'] == id) {
+                        var marker = L.marker([data[i]['campagna']['lat'], data[i]['campagna']['lon']]).addTo(map);
                         var popup = L.popup()
                             .setLatLng([data[i]['campagna']['lat'], data[i]['campagna']['lon']])
                             .setContent(data[i]['campagna']['nome_campagna'])
@@ -221,9 +224,11 @@ function openTab(evt, tabName) {
                 }
 
                 if (data['result'] == true) {
-                    let count = Object.keys(data).length - 1;
+                    let count = Object.keys(data).length;
                     //console.log(data[0]['username']);
                     for (let i = 0; i < count; i++) {
+                        //let card = "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">" + data['data'][i]['username'] + "</h5><a class=\"card-link\" href='profile.php?id=" + data['data'][i]['id'] + "'>Profilo</a></div></div>";
+                        //console.log(data['data'][i]);
                         document.getElementById(tabName).innerHTML += "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">" + data['data'][i]['username'] + "</h5><a class=\"card-link\" href='profile.php?id=" + data['data'][i]['id'] + "'>Profilo</a></div></div>";
                     }
 
@@ -236,7 +241,9 @@ function openTab(evt, tabName) {
     xmlhttp.open("GET", "functions.php?" + tabName + "=" + c, true);
     xmlhttp.send();
 }
-document.getElementById("defaultOpen").click();
+if(document.body.contains(document.getElementById("mapcmp"))){
+    document.getElementById("defaultOpen").click();
+}
 
 function addcomment() {
     let comment = document.getElementById('inp-commento').value;
@@ -257,7 +264,7 @@ function addcomment() {
 function view_tab_mod() {
     console.log("ciao");
     let box = document.querySelector(".box-modify-camp");
-
+    
     if (box.style.display == "block") {
         box.style.display = "none";
         document.body.style.overflow = "scroll";
@@ -266,5 +273,12 @@ function view_tab_mod() {
         document.body.style.overflow = "hidden";
         //document.body.style.backdropFilter = "brightness(50%)";
     }
+    
+}
 
+function close_box(){
+    let box = document.querySelector(".box-modify-camp");
+
+    box.style.display = "none";
+    document.body.style.overflow = "scroll";
 }
