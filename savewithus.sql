@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Creato il: Mag 22, 2024 alle 21:55
+-- Creato il: Mag 30, 2024 alle 21:45
 -- Versione del server: 10.4.27-MariaDB
 -- Versione PHP: 8.1.12
 
@@ -42,7 +42,7 @@ CREATE TABLE `amministratori` (
 --
 
 INSERT INTO `amministratori` (`id_admin`, `username`, `password`, `azione_utenti`, `azione_campagne`, `azione_blog`, `azione_eventi`) VALUES
-(1, 'admin', '$2y$10$nBR97QjHJoTGCL2Hnapmoe4KTy31LFMm39VdrXoLUfDNMm1DzxiPy', 'true', 'false', 'false', 'true');
+(1, 'admin', '$2y$10$nBR97QjHJoTGCL2Hnapmoe4KTy31LFMm39VdrXoLUfDNMm1DzxiPy', 'true', 'true', 'false', 'true');
 
 -- --------------------------------------------------------
 
@@ -58,6 +58,15 @@ CREATE TABLE `blog` (
   `stato` int(11) NOT NULL,
   `autore` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dump dei dati per la tabella `blog`
+--
+
+INSERT INTO `blog` (`id_blog`, `titolo`, `testo`, `created`, `stato`, `autore`) VALUES
+(1, 'Centri radioattivi', 'questo blog parla dei centri radioattivi in italia', '2024-05-30', 2, 2),
+(3, 'Blog di Anna', 'questo è un blog di anna di prova per vedere un attimo com\'è l\'applicazione', '2024-05-30', 2, 5),
+(4, 'Incremento rifiuti', 'Questo blog affronta il discorso inerente al incremento dei rifiuti sparsi in Italia, dove non dovrebbero esserci', '2024-05-30', 2, 7);
 
 -- --------------------------------------------------------
 
@@ -83,8 +92,8 @@ CREATE TABLE `campagne` (
 --
 
 INSERT INTO `campagne` (`id_campagna`, `nome_campagna`, `descrizione`, `giorno_ritrovo`, `foto`, `stato`, `autore`, `luogo`, `latitudine`, `longitudine`) VALUES
-(6, 'Segnalazione a Roma', 'Area di periferia di Roma messa male, piena di rifiuti lasciati dai cittadini', '2024-05-23', 'img-cite-log.jpg,img-cite-reg.jpeg,img-segnala-home.jpg, ', 1, 2, 'Roma, Lazio, Italia', '41.89332030', '12.48293210'),
-(7, 'Area Napoli', 'area in periferia di napoli molto sporca a causa dei cittadini, e brutta da guardare passando.', '2024-05-31', 'img-cite-reg.jpeg,img-segnala-home.jpg, ', 1, 2, 'Napoli, Campania, Italia', '40.83588460', '14.24876790'),
+(6, 'Segnalazione a Roma', 'Area di periferia di Roma messa male, piena di rifiuti lasciati dai cittadini', '2024-05-23', 'img-cite-log.jpg,img-cite-reg.jpeg,img-segnala-home.jpg, ', 2, 2, 'Roma, Lazio, Italia', '41.89332030', '12.48293210'),
+(7, 'Area Napoli', 'area in periferia di napoli molto sporca a causa dei cittadini, e brutta da guardare passando.', '2024-05-31', 'img-cite-reg.jpeg,img-segnala-home.jpg, ', 2, 2, 'Napoli, Campania, Italia', '40.83588460', '14.24876790'),
 (8, 'Nuova campanga', 'descrizione piccola', '2024-05-25', 'img_banner_camp.jpg,img-cite-log.jpg,img-cite-reg.jpeg, ', 1, 2, 'Milano, Lombardia, Italia', '45.45421190', '9.11135096');
 
 -- --------------------------------------------------------
@@ -104,7 +113,8 @@ CREATE TABLE `cod_tokens` (
 
 INSERT INTO `cod_tokens` (`token`, `id_user`) VALUES
 ('$2y$10$A4XUbt0jlLYhKs6GbOALIeBKop3Xptn7eeo9syLN.A993oKNc42Ti', 5),
-('$2y$10$6mZJGWv/IXTUAsljRwX9TunJTTMF8dOhzGGl9oNQjssrU7I2pWG.u', 6);
+('$2y$10$6mZJGWv/IXTUAsljRwX9TunJTTMF8dOhzGGl9oNQjssrU7I2pWG.u', 6),
+('$2y$10$MB4T2fpWy4ejXCa5qZueDewbt3Gq8zPD5VusQpXLVGgs4/Gr5VPMu', 7);
 
 -- --------------------------------------------------------
 
@@ -178,7 +188,8 @@ INSERT INTO `utenti` (`id_user`, `nome`, `cognome`, `email`, `num_tel`, `usernam
 (1, 'Mario', 'Rossi', '123456789', 'mariorossi@gm', 'mario79', '$2y$10$xuhFGheXxOe7mwfklOPDEudnyWWbyTnQjMovn8OLINWTDY8xHIh7y', '0000-00-00 00:00:00'),
 (2, 'Mario', 'Rossi', 'mariorossi@gmail.com', '123456789', 'mario79', '$2y$10$13HpRrhAqh7K/gSUbOul6urTNclHJrYIFcv5vJboqQfn74f.Qpgr.', '2024-04-28 19:35:05'),
 (5, 'Anna', 'Verdi', 'annaverdi@gmail.com', '1234567890', 'anna90', '$2y$10$2GcSkCvM6rxBjzNMJAKpIu6IZK5wqGfzRpeQMqCi5MuDytahcp3f.', '2024-04-30 18:42:14'),
-(6, 'Federico', 'Sala', 'federicosala@gmail.com', '1234567890', 'fede80', '$2y$10$K6dZ86ruM5v1UGznfb948.wLluBT1L7LsPZ2wJgNCOry4gUB90t2W', '2024-05-02 21:58:38');
+(6, 'Federico', 'Sala', 'federicosala@gmail.com', '1234567890', 'fede80', '$2y$10$K6dZ86ruM5v1UGznfb948.wLluBT1L7LsPZ2wJgNCOry4gUB90t2W', '2024-05-02 21:58:38'),
+(7, 'Federico', 'Rossi', 'federicorossi@gmail.com', '1234567890', 'federed80', '$2y$10$/oStji.cVGvVo37xF1SI0uMTLe6CMOZ10XWVZK.9dREuJsrU79mBy', '2024-05-30 21:18:02');
 
 --
 -- Indici per le tabelle scaricate
@@ -251,7 +262,7 @@ ALTER TABLE `amministratori`
 -- AUTO_INCREMENT per la tabella `blog`
 --
 ALTER TABLE `blog`
-  MODIFY `id_blog` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id_blog` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT per la tabella `campagne`
@@ -269,7 +280,7 @@ ALTER TABLE `eventi`
 -- AUTO_INCREMENT per la tabella `utenti`
 --
 ALTER TABLE `utenti`
-  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- Limiti per le tabelle scaricate

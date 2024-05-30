@@ -1,0 +1,37 @@
+*{
+    margin: 0;
+}
+
+html, body{
+    height: 100%;
+}
+
+.card-center{
+    padding: 2%;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    margin-right: 20%;
+    margin-left: 20%;
+    
+}
+.card-center form {
+    display: grid;
+}
+.card-center form label {
+    margin-top: 2%;
+}
+.card-center form .input-title{
+    margin-top: 2%;
+    padding: 10px;
+    border-radius: 15px;
+    border: 1px solid grey;
+}
+.card-center form #textarea-content{
+    margin-top: 2%;
+    padding: 10px;
+    border-radius: 10px;
+}
+.card-center form .pubb-blog{
+    margin-top: 3%;
+    padding: 10px;
+}

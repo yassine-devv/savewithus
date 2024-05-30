@@ -1,7 +1,7 @@
 <?php
 session_start();
-include("./functions.php");
-include("./db.php");
+include ("./functions.php");
+include ("./db.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,14 +12,17 @@ include("./db.php");
     <title>Blog - SaveWithUs</title>
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/blog.css">
-    
+
     <!--bootstrap-->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <!--google font-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
 
 </head>
 
@@ -33,7 +36,7 @@ include("./db.php");
         <div class="links">
             <a href="./index.php">Home</a>
             <a href="campagne.php">Campagne</a>
-            <a href="blog.php">Blog</a>
+            <a href="blogs.php">Blog</a>
             <a href="eventi.php">Eventi</a>
             <?php
             if (isset($_SESSION['iduser'])) {
@@ -46,44 +49,107 @@ include("./db.php");
     </div>
 
     <div class="main-blog">
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
+        <div class="top-title-btn">
+            <h2>Blogs</h2>
+            <button onclick="window.location.href = 'new_blog.php' " class="btn btn-primary">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-patch-plus-fill" viewBox="0 0 16 16">
+                    <path
+                        d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0" />
+                </svg>
+
+                Pubblica blog
+            </button>
         </div>
+        <div class="container-blogs">
+
+            <?php
+            $sql = 'SELECT blog.id_blog, blog.titolo, blog.testo, blog.created, blog.stato, blog.autore, utenti.username FROM utenti join blog on utenti.id_user=blog.autore where blog.stato=2;';
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    ?>
+                    <div class="card" style="width: 18rem;">
+                        <div class="card-body">
+                            <img class="card-img-top" src="./imgs/img-blog.png" alt="Card image cap"><br><br>
+                            <h5 class="card-title"><?= $row['titolo'] ?></h5>
+                            <p class="card-text"><b><?= $row['username'] ?></b></p>
+                            <p class="card-text">Pubblicato il:<?= date('d M Y', strtotime($row['created']));?></p>
+                            <a href="blog.php?id=<?= $row['id_blog'] ?>" class="btn btn-primary">Leggi</a>
+                        </div>
+                    </div>
+                    <?php
+                }
+
+            } else {
+                echo '<h4>Nessun blog pubblicato</h4>';
+            }
+
+            ?>
+            <!-- <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <img class="card-img-top" src="./imgs/img-blog.png" alt="Card image cap"><br><br>
+                    <h5 class="card-title">Titolo</h5>
+                    <p class="card-text"><b>Userame</b></p>
+                    <p class="card-text">Pubblicato il</p>
+                    <a href="blog.php?id=1" class="btn btn-primary">Leggi</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <img class="card-img-top" src="./imgs/img-blog.png" alt="Card image cap"><br><br>
+                    <h5 class="card-title">Titolo</h5>
+                    <p class="card-text"><b>Userame</b></p>
+                    <p class="card-text">Pubblicato il</p>
+                    <a href="blog.php?id=1" class="btn btn-primary">Leggi</a>
+                </div>
+            </div>
+            <div class="card" style="width: 18rem;">
+                <div class="card-body">
+                    <img class="card-img-top" src="./imgs/img-blog.png" alt="Card image cap"><br><br>
+                    <h5 class="card-title">Titolo</h5>
+                    <p class="card-text"><b>Userame</b></p>
+                    <p class="card-text">Pubblicato il</p>
+                    <a href="blog.php?id=1" class="btn btn-primary">Leggi</a>
+                </div>
+            </div>-->
+        </div> 
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col info-contact">
-                    <img src="./imgs/logoswu.png" alt="" width="300" height="100"><br>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                        </svg>
-                        <span>info@savewithus.com</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                        </svg>
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col info-contact">
+                        <img src="./imgs/logoswu.png" alt="" width="300" height="100"><br>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-envelope" viewBox="0 0 16 16">
+                                <path
+                                    d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+                            </svg>
+                            <span>info@savewithus.com</span>
+                        </div>
+                        <div>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                                class="bi bi-telephone-fill" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
+                            </svg>
 
-                        <span>+39 1234567890</span>
+                            <span>+39 1234567890</span>
+                        </div>
                     </div>
-                </div>
-                <div class="col links">
-                    <a href="./index.php">Home</a>
-                    <a href="#">Campagne</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Eventi</a>
-                    <a href="#">Login</a>
+                    <div class="col links">
+                        <a href="./index.php">Home</a>
+                        <a href="#">Campagne</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Eventi</a>
+                        <a href="#">Login</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </footer>
+        </footer>
 
 
 </body>

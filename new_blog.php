@@ -2,6 +2,26 @@
 session_start();
 include("./functions.php");
 include("./db.php");
+
+if(!isset($_SESSION['iduser'])){
+    header('location: login.php');
+}
+
+if($_SERVER['REQUEST_METHOD']=="POST"){
+    if(isset($_POST["pubb-blog"])){
+        $titolo = $_POST["title-blog"];
+        $content = $_POST["descrizione"];
+
+        $sql = "INSERT INTO `blog`(`titolo`, `testo`, `created`, `stato`, `autore`) VALUES (\"".$titolo."\",\"".$content."\",'".date("Y-m-d")."','1','".$_SESSION['iduser']."')";
+        //die($sql);
+        //$result = $conn->query($sql);
+
+        if($conn->query($sql)){
+            header("location: blogs.php");
+        }
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,6 +32,7 @@ include("./db.php");
     <title>Blog - SaveWithUs</title>
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/blog.css">
+    <link rel="stylesheet" href="./style/newblog.css">
     
     <!--bootstrap-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -33,7 +54,7 @@ include("./db.php");
         <div class="links">
             <a href="./index.php">Home</a>
             <a href="campagne.php">Campagne</a>
-            <a href="blog.php">Blog</a>
+            <a href="blogs.php">Blog</a>
             <a href="eventi.php">Eventi</a>
             <?php
             if (isset($_SESSION['iduser'])) {
@@ -46,8 +67,15 @@ include("./db.php");
     </div>
 
     <div class="main-blog">
-        <div class="card">
-
+        <div class="card-center">
+            <h4>Nuovo Blog</h4>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="post">
+                <label>Titolo del blog:</label>
+                <input type="text" class="input-title" placeholder="Dai un titolo al tuo blog" name="title-blog">
+                <label>Contenuto: </label>
+                <textarea name="descrizione" rows="10" id="textarea-content" placeholder="Scrivi qua il contenuto del tuo blog"></textarea>
+                <input type="submit" class="btn btn-primary pubb-blog" name="pubb-blog" value="Pubblica">
+            </form>
         </div>
     </div>
 

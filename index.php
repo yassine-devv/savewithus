@@ -32,7 +32,7 @@ session_start();
         <div class="links">
             <a href="./index.php">Home</a>
             <a href="campagne.php">Campagne</a>
-            <a href="blog.php">Blog</a>
+            <a href="blogs.php">Blog</a>
             <a href="eventi.php">Eventi</a>
             <?php 
             if(isset($_SESSION['iduser'])){
