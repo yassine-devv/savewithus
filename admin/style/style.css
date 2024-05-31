@@ -68,6 +68,57 @@ html {
     padding: 5%;
 
 }
+.main .table-blogs{
+    height: 100%;
+    padding: 5%;
+
+}
+
+.box-modify-camp {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    padding: 2%;
+    background-color: #e8edea;
+    z-index: 2;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 20px;
+}
+.box-modify-camp .top {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3%;
+}
+.box-modify-camp .top svg {
+    margin-left: auto;
+}
+.box-modify-camp #title {
+    font-size: larger;
+    font-weight: bold;
+}
+.box-modify-camp form div {
+    display: grid;
+    margin-top: 2%;
+    
+}
+.box-modify-camp form div label{
+    margin-top: 2%;
+}
+.box-modify-camp form input[type=submit] {
+    float: right;
+    margin-top: 3%;
+}
+
+.modal{
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+}
 
 /* 
 .main .dati_profilo .privilegi .switch {

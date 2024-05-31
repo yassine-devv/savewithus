@@ -245,10 +245,10 @@ if(isset($_GET['Partecipanti'])){
             //if($row['id_user']!==$_SESSION['iduser']){
                 $resp['result'] = true;
                 array_push($resp['data'], ["id"=> $row['id_user'], "username"=> $row['username']]);
-            //}
-            //$resp = ['result' => true, 'msg' => "Nessun volontario al momento iscritto in questa campagna"];
-        }
-    }else{
+                //}
+                //$resp = ['result' => true, 'msg' => "Nessun volontario al momento iscritto in questa campagna"];
+            }
+        }else{
         $resp = ['result' => false, 'msg' => "Nessun volontario al momento iscritto in questa campagna"];
         echo json_encode($resp);
     }
@@ -258,7 +258,19 @@ if(isset($_GET['Partecipanti'])){
     }
     
     echo json_encode($resp);
+    
+}
+if(isset($_GET['blog_content'])){
+    include ('./db.php');
+    
+    $sql = "SELECT blog.testo FROM blog WHERE blog.id_blog=".$_GET['blog_content'];
+    $ris = $conn->query($sql);
 
+    if($ris->num_rows > 0){
+        $row = $ris->fetch_assoc();
+        echo $row['testo'];
+    }
+    
 }
 
 ?>

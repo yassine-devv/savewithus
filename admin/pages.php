@@ -23,6 +23,22 @@ if (isset($_GET['azionecamp'])) {
         }
     }
 }
+if (isset($_GET['azioneblog'])) {
+    if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        if (isset($_POST["accept"])) {
+            $sql = "UPDATE blog SET blog.stato='2' WHERE blog.id_blog=" . $_GET['azioneblog'];
+            $ris = $conn->query($sql);
+
+            header('location: index.php?page=blog');
+        }
+        if (isset($_POST["delete"])) {
+            $sql = "UPDATE blog SET blog.stato='0' WHERE blog.id_blog=" . $_GET['azioneblog'];
+            $ris = $conn->query($sql);
+
+            header('location: index.php?page=blog');
+        }
+    }
+}
 
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -218,23 +234,151 @@ function get_page($page)
             } else {
                 echo 'Non hai accesso a questa sezione';
             }
-            
-            
+
+
             break;
-            case "blog":
-                if ($risprivilegi->fetch_assoc()['azione_blog'] == "true") {
-                    echo "blog";
-                }else{
-                    echo 'Non hai accesso a questa sezione';
+        case "blog":
+            if ($risprivilegi->fetch_assoc()['azione_blog'] == "true") {
+        ?>
+            <div class="table-blogs">
+                <h3>Blogs</h3>
+                <br>
+                <table class="table">
+                    <h3>Da accettare</h3><br>
+                    <?php
+                    $sql = "SELECT blog.id_blog, blog.titolo, blog.testo, blog.created, blog.stato, blog.autore, utenti.id_user, utenti.username FROM utenti join blog on utenti.id_user=blog.autore where blog.stato=1";
+                    $ris = $conn->query($sql);
+                    if ($ris->num_rows > 0) {
+                    ?>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Autore</th>
+                                <th scope="col">Titolo</th>
+                                <th scope="col">Testo</th>
+                                <th scope="col">Data creazione</th>
+                                <th scope="col">Azioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php
+
+                            while ($row = $ris->fetch_assoc()) {
+                                /* if ($row["stato"] == "1") { */
+                            ?>
+                                <tr>
+                                    <th><?= $row['id_blog'] ?></th>
+                                    <td><?= $row['username']  ?></td>
+                                    <td><?= $row['titolo'] ?></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="view_content_blog('<?= $row['id_blog']  ?>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                    <td><?= $row['created'] ?></td>
+                                    <td>
+                                        <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) . "?azioneblog=" . $row["id_blog"] ?>" method="post">
+                                            <input type="submit" class="btn btn-success" value="Accetta" name="accept">
+                                            <input type="submit" class="btn btn-danger" value="Respingi" name="delete">
+                                        </form>
+                                    </td>
+                                </tr>
+                            <?php
+                                /* } */
+                            }
+
+
+                            ?>
+                        </tbody>
+                    <?php
+                    } else {
+                    ?>
+                        <tr>
+                            <h5>Nessun blog da accettare</h5>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+                <table class="table">
+                    <br>
+                    <h3>Pubblici</h3><br>
+                    <?php
+                    $sql = "SELECT blog.id_blog, blog.titolo, blog.testo, blog.created, blog.stato, blog.autore, utenti.id_user, utenti.username FROM utenti join blog on utenti.id_user=blog.autore where blog.stato=2";
+                    $ris = $conn->query($sql);
+                    if ($ris->num_rows > 0) {
+                    ?>
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Id</th>
+                                <th scope="col">Autore</th>
+                                <th scope="col">Titolo</th>
+                                <th scope="col">Testo</th>
+                                <th scope="col">Data creazione</th>
+                                <!-- <th scope="col">Azioni</th> -->
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <?php
+
+                            while ($row = $ris->fetch_assoc()) {
+                                /* if ($row["stato"] == "1") { */
+                            ?>
+                                <tr>
+                                    <th><?= $row['id_blog'] ?></th>
+                                    <td><?= $row['username']  ?></td>
+                                    <td><?= $row['titolo'] ?></td>
+                                    <td>
+                                        <button class="btn btn-primary" onclick="view_content_blog('<?= $row['id_blog']  ?>')">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                                                <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8M1.173 8a13 13 0 0 1 1.66-2.043C4.12 4.668 5.88 3.5 8 3.5s3.879 1.168 5.168 2.457A13 13 0 0 1 14.828 8q-.086.13-.195.288c-.335.48-.83 1.12-1.465 1.755C11.879 11.332 10.119 12.5 8 12.5s-3.879-1.168-5.168-2.457A13 13 0 0 1 1.172 8z" />
+                                                <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5M4.5 8a3.5 3.5 0 1 1 7 0 3.5 3.5 0 0 1-7 0" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                    <td><?= $row['created'] ?></td>
+                                    <!-- <td>
+                                                <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']) . "?azioneblog=" . $row["id_blog"] ?>" method="post">
+                                                    <input type="submit" class="btn btn-success" value="Accetta" name="accept">
+                                                    <input type="submit" class="btn btn-danger" value="Respingi" name="delete">
+                                                </form>
+                                            </td> -->
+                                </tr>
+                            <?php
+                                /* } */
+                            }
+
+
+                            ?>
+                        </tbody>
+                    <?php
+                    } else {
+                    ?>
+                        <tr>
+                            <h5>Nessun blog pubblico</h5>
+                        </tr>
+                    <?php
+                    }
+                    ?>
+                </table>
+            </div>
+        <?php
+            } else {
+                echo 'Non hai accesso a questa sezione';
             }
             break;
-            case "eventi":
-                if ($risprivilegi->fetch_assoc()['azione_eventi'] == "true") {
-                    echo boolval($risprivilegi->fetch_assoc()['azione_eventi']); 
-                    echo "eventi";
-                }else{
-                    echo 'Non hai accesso a questa sezione';
-                }
+        case "eventi":
+            if ($risprivilegi->fetch_assoc()['azione_eventi'] == "true") {
+                echo boolval($risprivilegi->fetch_assoc()['azione_eventi']);
+                echo "eventi";
+            } else {
+                echo 'Non hai accesso a questa sezione';
+            }
             break;
         default:
             $sql = "SELECT * from amministratori";
@@ -295,3 +439,48 @@ function get_page($page)
 }
 
 ?>
+
+<div class="box-modify-camp">
+    <div class="top">
+        <span id="title">VISUALIZZA CONTENUTO</span><br>
+        <svg onclick="close_box()" xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+            <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708" />
+        </svg>
+    </div>
+
+    <div id="content"></div>
+
+</div>
+
+<script>
+    function view_content_blog(id) {
+        console.log("ciao");
+        let box = document.querySelector(".box-modify-camp");
+
+        if (box.style.display == "block") {
+            box.style.display = "none";
+            document.body.style.overflow = "scroll";
+        } else {
+            box.style.display = "block";
+            document.body.style.overflow = "hidden";
+
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    console.log(this.responseText);
+                    document.getElementById('content').innerHTML = "<p>"+this.responseText+"</p>";
+                }
+            }
+            xmlhttp.open("GET", "../functions.php?blog_content=" + id, true);
+            xmlhttp.send();
+        }
+
+    }
+
+    function close_box() {
+        let box = document.querySelector(".box-modify-camp");
+
+        box.style.display = "none";
+        document.body.style.overflow = "scroll";
+    }
+</script>

@@ -1,0 +1,35 @@
+html, body{
+    height: 100%;
+}
+
+*{
+    margin: 0;
+}
+
+.banner{
+    height: 40%;
+    background-image: url("../imgs/img-blog.png");
+    background-repeat: none;
+    background-size: cover;
+    padding: 5%;
+    align-content: center;
+}
+
+.banner .title{
+    font-size: 27pt;
+    font-weight: bold;
+    color: white;
+}
+
+.banner .autore{
+    font-size: 20pt;
+    color: white;
+
+}
+
+.content-txt{
+    padding: 7%;
+}
+.content{
+    font-size: 14pt;
+}
