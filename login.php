@@ -16,11 +16,21 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     if ($ris->num_rows > 0) {
         while ($row = $ris->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
+                if (isset($_POST['ricordami'])) {
+                    $token = bin2hex(random_bytes(16)); // funzione bin2hex converte una stringa binaria in esadecimale. random_bytes genera una string con lunghezza indicata
+                    $scadenza = time() + (86400 * 15); // 15 giorni
+
+                    setcookie('ricordami', $token, $scadenza, "/", "", true, true);
+
+                    $sqltk = "INSERT INTO tokens_utenti (id_user, token, scandenza) VALUES ('".$row['id_user']."', '".$token."', '".date('Y-m-d H:i:s', $scadenza)."')";
+                    $ristk = $conn->query($sqltk); 
+                }
 
                 $_SESSION['iduser'] = $row['id_user'];
                 $_SESSION['username'] = $row['username'];
 
-                header("location: index.php");
+                header("location: user.php");
+                exit(0);
             } else {
                 $err = 'Credenziali non corrette, riprova.';
             }
@@ -29,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
         $err = 'Credenziali non corrette, riprova.';
     }
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -51,26 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 <body>
 
-    <div class="navbar">
-        <div class="img-logo">
-            <a href="./index.php">
-                SaveWithUs
-            </a>
-        </div>
-        <div class="links">
-            <a href="./index.php">Home</a>
-            <a href="campagne.php">Campagne</a>
-            <a href="blogs.php">Blog</a>
-            <a href="eventi.php">Eventi</a>
-            <?php 
-            if(isset($_SESSION['iduser'])){
-                echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
-            }else{
-                echo '<a href="login.php">Login</a>';
-            }
-            ?>
-        </div>
-    </div>
+    <?php include "navbar.php" ?>
 
     <div class="container all-form-cite" style="margin: 0;">
         <div class="row form-cite form-cite-login">
@@ -113,7 +103,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                     <br>
 
-
                     <?php
                     if (isset($err)) {
                         echo '<span style="color: red; font-weight: bold">' . $err . '</span>';
@@ -122,8 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
                     <br>
 
-                    <!-- <input type="checkbox" name="ricordami" value="ricordami">
-                    <label>Ricordami</label> -->
+                    <input type="checkbox" name="ricordami" value="ricordami">
+                    <label>Ricordami</label>
 
                     <br><br>
 

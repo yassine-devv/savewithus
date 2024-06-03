@@ -1,10 +1,12 @@
 <?php
 session_start();
-include ("./functions.php");
 include ("./db.php");
+include ("./functions.php");
+include ("./ricordami_cookie.php");
 
 if (!isset($_SESSION["iduser"])) {
     header("Location: login.php");
+    exit(0);
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
@@ -13,7 +15,9 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $lat = $_POST["lat"];
     $lon = $_POST["lon"];
     $dsp_nm = $_POST["dsp_nm"];
-    $data_cmp = $_POST["data-svolg"];
+    //$data_cmp = $_POST["data-svolg"];
+    $data_cmp = $_POST["y-data"]."-".$_POST["m-data"]."-".$_POST['d-data'];
+
 
     /*file*/
     $rismovfile = false;
@@ -82,7 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             }
         }
 
-        header("location: campagne.php");
+        header("location: user.php?page=campagne");
         exit;
     }
 
@@ -100,201 +104,118 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/segnala.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+
 
     <style>
-        /*
-        #map {
-            height: 300px;
-        }
-        
-        #results{
-            /* position: absolute; */
-        /* top: 0;
-            left: 0; 
-            border: black 1px solid;
-            border: black 1px solid;
-        }
-        */
-
-        #lat,
-        #lon,
-        #dsp_nm {
-            display: none;
+        * {
+            box-sizing: border-box;
         }
 
-        #results {
-            overflow-y: scroll;
-            height: 100px;
-            display: none;
-        }
-
-        #results p {
-            margin: 0;
-        }
-
-        .container {
-            width: 95%;
-            max-width: 980px;
-            padding: 1% 2%;
-            margin: 0 auto
-        }
-
-        #map {
-            /* width: 100%;
-            height: 50%; */
-            height: 300px;
-
-            padding: 0;
-            margin: 0;
-            z-index: 1;
-        }
-
-        .address {
-            cursor: pointer
-        }
-
-        .address:hover {
-            color: #AA0000;
-            text-decoration: underline
+        body {
+            background-color: #f1f1f1;
         }
     </style>
 </head>
 
 <body>
 
-    <div class="navbar">
-        <div class="img-logo">
-            <a href="./index.php">
-                SaveWithUs
-            </a>
+    <?php include "navbar.php" ?>
+
+    <form id="segnalaForm" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST" enctype="multipart/form-data">
+        <h1>Segnala campagna</h1>
+        <!-- One "tab" for each step in the form: -->
+        <div class="tab">
+            <label>Nome camapagna:</label>
+            <p><input placeholder="Dai un nome alla tua campagna" oninput="this.className = ''" name="nome-campagna"></p>
+            <!-- <p><input placeholder="Last name..." oninput="this.className = ''" name="lname"></p> -->
+            <label>Descrizione:</label>
+            <p><textarea name="descrizione-camp" cols="70" rows="7" placeholder="Descrivi un po l'area"></textarea></p>
+            <label>Data ritrovo:</label>
+            <p>
+            <div class="sez-gr">
+                <div class="inp custom-select">
+                    <select onload="mod_mese(document.getElementById('slct_mese').value)" id="slct_day"
+                        name="d-data"></select>
+                    <!-- <input type="number" name="d-data"  placeholder="Data" max="31"> -->
+                </div>
+                <div class="inp custom-select">
+                    <select onchange="mod_mese(this.value)" id="slct_mese" name="m-data">
+                        <?php
+                        foreach ($mesi as $m) {
+                            ?>
+                            <option value="<?= array_search($m, $mesi) + 1 ?>"><?php echo $m ?></option>
+                            <?php
+                        }
+                        ?>
+                    </select>
+                    <!-- <input type="number" name="m-data"  placeholder="Mese" max="12"> -->
+                </div>
+                <div class="inp">
+                    <input type="number" id="inp-anno" onkeyup="verify_anno(this.value)" name="y-data"
+                        placeholder="Anno">
+                    <span id="invalid-y"></span>
+                </div>
+            </div>
+            </p>
         </div>
-        <div class="links">
-            <a href="./index.php">Home</a>
-            <a href="campagne.php">Campagne</a>
-            <a href="blogs.php">Blog</a>
-            <a href="eventi.php">Eventi</a>
-            <?php 
-            if(isset($_SESSION['iduser'])){
-                echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
-            }else{
-                echo '<a href="login.php">Login</a>';
-            }
-            ?>
+        <div class="tab">
+            <p><label>Scegli delle foto che rappresentano l'area che vuoi segnalare:</label></p><br>
+            <p><input type="file" name="files[]" multiple></p>
         </div>
-    </div>
-
-
-
-    <div class="formbold-main-wrapper">
-        <div class="formbold-form-wrapper">
-            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']) ?>" method="POST"
-                enctype="multipart/form-data">
-                <div class="formbold-steps">
-                    <ul>
-                        <li class="formbold-step-menu1 active">
-                            <span>1</span>
-                            Nome Campagna
-                        </li>
-                        <li class="formbold-step-menu2">
-                            <span>2</span>
-                            Foto
-                        </li>
-                        <li class="formbold-step-menu3">
-                            <span>3</span>
-                            Luogo
-                        </li>
-                    </ul>
-                </div>
-
-                <div class="formbold-form-step-1 active">
-                    <div>
-                        <label for="address" class="formbold-form-label">Nome campanga</label>
-                        <input type="text" name="nome-campagna" id="address" placeholder="Dai un nome alla tua campgna"
-                            class="formbold-form-input" />
+        <div class="tab">
+            <p>Seleziona il luogo che vuoi: </p>
+            <div class="container" style="align-content: center">
+                <div class="row">
+                    <div class="col">
+                        <div id="map"></div>
                     </div>
+                    <div class="col">
+                        <input type="text" name="lat" id="lat" size=12 value="">
+                        <input type="text" name="lon" id="lon" size=12 value="">
+                        <input type="text" name="dsp_nm" id="dsp_nm" value="">
+        
+                        <label for="address" class="formbold-form-label">Inserisci il luogo:</label>
+        
+                        <div class="row">
+                            <!-- <div class="col-8"> -->
+                                <input onkeyup="addr_search();" type="text" name="addr" value="" id="addr" size="58" class="formbold-form-input" />
+                            <!-- </div> -->
 
-                    <div>
-                        <label for="address" class="formbold-form-label">Descrizione</label>
-                        <textarea name="descrizione-camp" cols="65" rows="7"
-                            placeholder="Descrivi un po l'area"></textarea>
-                    </div>
-                    <div>
-                        <label for="date" class="formbold-form-label">Data:</label>
-                        <input type="date" name="data-svolg" id="">
-                    </div>
-                </div>
-
-                <div class="formbold-form-step-2">
-                    <label>Scegli delle foto che rappresentano l'area che vuoi segnalare:</label><br>
-                    <input type="file" name="files[]" multiple>
-                </div>
-
-                <div class="formbold-form-step-3 ">
-                    <div class="formbold-form-confirm">
-                        <div class="container" style="align-content: center">
-
-                            <!-- <b>Coordinates</b> -->
-
-                            <!-- <form> -->
-                            <input type="text" name="lat" id="lat" size=12 value="">
-                            <input type="text" name="lon" id="lon" size=12 value="">
-                            <input type="text" name="dsp_nm" id="dsp_nm" value="">
-                            <!-- </form> -->
-
-                            <label for="address" class="formbold-form-label">Inserisci il luogo:</label>
-
-                            <div class="row">
-                                <div class="col-8">
-                                    <input type="text" name="addr" value="" id="addr" size="58"
-                                        class="formbold-form-input" />
-                                    <div id="results"></div>
-                                </div>
-                                <div class="col-4">
-                                    <button type="button" class="btn btn-primary" onclick="addr_search();"
-                                        class="">Search</button>
-                                </div>
-                            </div>
-                            <br />
-                            <div id="map"></div>
-
+                            <!-- <div class="col-4">
+                                <button type="button" style="width: 100%;" class="btn btn-primary" onclick="addr_search();" class="">Cerca</button>
+                            </div> -->
+                            <br><br>
+                            <div id="results"></div>
                         </div>
-
                     </div>
                 </div>
 
-                <div class="formbold-form-btn-wrapper">
-                    <button class="formbold-back-btn">
-                        Inditro
-                    </button>
-
-                    <button class="formbold-btn">
-                        Avanti
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <g clip-path="url(#clip0_1675_1807)">
-                                <path
-                                    d="M10.7814 7.33312L7.20541 3.75712L8.14808 2.81445L13.3334 7.99979L8.14808 13.1851L7.20541 12.2425L10.7814 8.66645H2.66675V7.33312H10.7814Z"
-                                    fill="white" />
-                            </g>
-                            <defs>
-                                <clipPath id="clip0_1675_1807">
-                                    <rect width="16" height="16" fill="white" />
-                                </clipPath>
-                            </defs>
-                        </svg>
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
-    </div>
+        <div style="overflow:auto;">
+            <div style="float:right;">
+                <button type="button" id="prevBtn" onclick="nextPrev(-1)">Indietro</button>
+                <button type="button" id="nextBtn" onclick="nextPrev(1)">Avanti</button>
+            </div>
+        </div>
+        <!-- Circles which indicates the steps of the form: -->
+        <div style="text-align:center;margin-top:40px;">
+            <span class="step"></span>
+            <span class="step"></span>
+            <span class="step"></span>
+        </div>
+    </form>
 
     <script>
         // 41.458,12.706
-        var startlat = 41.458;
-        var startlon = 12.706;
+        var startlat = 41.443;
+        var startlon = 12.700;
 
         var options = {
             center: [startlat, startlon],
@@ -374,7 +295,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                 }
                 document.getElementById('results').innerHTML = out;
             } else {
-                document.getElementById('results').innerHTML = "Sorry, no results...";
+                document.getElementById('results').innerHTML = "Nessun risultato...";
             }
 
         }
@@ -392,59 +313,113 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             xmlhttp.open("GET", url, true);
             xmlhttp.send();
         }
+        //form
+        var currentTab = 0; // Current tab is set to be the first tab (0)
+        showTab(currentTab); // Display the current tab
 
-        // form
-        const stepMenuOne = document.querySelector('.formbold-step-menu1')
-        const stepMenuTwo = document.querySelector('.formbold-step-menu2')
-        const stepMenuThree = document.querySelector('.formbold-step-menu3')
-
-        const stepOne = document.querySelector('.formbold-form-step-1')
-        const stepTwo = document.querySelector('.formbold-form-step-2')
-        const stepThree = document.querySelector('.formbold-form-step-3')
-
-        const formSubmitBtn = document.querySelector('.formbold-btn')
-        const formBackBtn = document.querySelector('.formbold-back-btn')
-
-        formSubmitBtn.addEventListener("click", function (event) {
-            event.preventDefault()
-            if (stepMenuOne.className == 'formbold-step-menu1 active') {
-                event.preventDefault()
-
-                stepMenuOne.classList.remove('active')
-                stepMenuTwo.classList.add('active')
-
-                stepOne.classList.remove('active')
-                stepTwo.classList.add('active')
-
-                formBackBtn.classList.add('active')
-                formBackBtn.addEventListener("click", function (event) {
-                    event.preventDefault()
-
-                    stepMenuOne.classList.add('active')
-                    stepMenuTwo.classList.remove('active')
-
-                    stepOne.classList.add('active')
-                    stepTwo.classList.remove('active')
-
-                    formBackBtn.classList.remove('active')
-
-                })
-
-            } else if (stepMenuTwo.className == 'formbold-step-menu2 active') {
-                event.preventDefault()
-
-                stepMenuTwo.classList.remove('active')
-                stepMenuThree.classList.add('active')
-
-                stepTwo.classList.remove('active')
-                stepThree.classList.add('active')
-
-                formBackBtn.classList.remove('active')
-                formSubmitBtn.textContent = 'Submit'
-            } else if (stepMenuThree.className == 'formbold-step-menu3 active') {
-                document.querySelector('form').submit()
+        function showTab(n) {
+            // This function will display the specified tab of the form...
+            var x = document.getElementsByClassName("tab");
+            x[n].style.display = "block";
+            //... and fix the Previous/Next buttons:
+            if (n == 0) {
+                document.getElementById("prevBtn").style.display = "none";
+            } else {
+                document.getElementById("prevBtn").style.display = "inline";
             }
-        })
+            if (n == (x.length - 1)) {
+                document.getElementById("nextBtn").innerHTML = "Invia";
+            } else {
+                document.getElementById("nextBtn").innerHTML = "Avanti";
+            }
+            //... and run a function that will display the correct step indicator:
+            fixStepIndicator(n)
+        }
+
+        function nextPrev(n) {
+            // This function will figure out which tab to display
+            var x = document.getElementsByClassName("tab");
+            // Exit the function if any field in the current tab is invalid:
+            if (n == 1 && !validateForm()) return false;
+            // Hide the current tab:
+            x[currentTab].style.display = "none";
+            // Increase or decrease the current tab by 1:
+            currentTab = currentTab + n;
+            // if you have reached the end of the form...
+            if (currentTab >= x.length) {
+                // ... the form gets submitted:
+                document.getElementById("segnalaForm").submit();
+                return false;
+            }
+            // Otherwise, display the correct tab:
+            showTab(currentTab);
+        }
+
+        function validateForm() {
+            // This function deals with validation of the form fields
+            var x, y, i, valid = true;
+            x = document.getElementsByClassName("tab");
+            y = x[currentTab].getElementsByTagName("input");
+            // A loop that checks every input field in the current tab:
+            for (i = 0; i < y.length; i++) {
+                // If a field is empty...
+                if (y[i].value == "") {
+                    // add an "invalid" class to the field:
+                    y[i].className += " invalid";
+                    // and set the current valid status to false
+                    valid = false;
+                }
+            }
+
+            if (x[currentTab].getElementsByTagName("textarea").value == "") {
+                valid = false;
+            }
+            // If the valid status is true, mark the step as finished and valid:
+            if (valid) {
+                document.getElementsByClassName("step")[currentTab].className += " finish";
+            }
+            return valid; // return the valid status
+        }
+
+        function fixStepIndicator(n) {
+            // This function removes the "active" class of all steps...
+            var i, x = document.getElementsByClassName("step");
+            for (i = 0; i < x.length; i++) {
+                x[i].className = x[i].className.replace(" active", "");
+            }
+            //... and adds the "active" class on the current step:
+            x[n].className += " active";
+        }
+
+        const d = new Date();
+        let y = d.getFullYear();
+        let dd = d.getDay();
+        let mm = d.getMonth();
+
+        window.onload = mod_mese(document.getElementById('slct_mese').value);
+        window.onload = document.getElementById('inp-anno').value = y;
+
+        function mod_mese(m) {
+            let giorni_mesi = { '1': '31', '2': '28', '3': '31', '4': '30', '5': '31', '6': '30', '7': '31', '8': '31', '9': '30', '10': '31', '11': '30', '12': '31' };
+
+            document.getElementById('slct_day').innerHTML = "";
+
+            for (let i = 1; i <= parseInt(giorni_mesi[m]); i++) {
+                document.getElementById('slct_day').innerHTML += '<option value="' + i + '">' + i + '</option>';
+            }
+
+        }
+
+        function verify_anno(anno) {
+            const d = new Date();
+            let y = d.getFullYear();
+            if (anno < y) {
+                document.getElementById('invalid-y').innerHTML = "Anno non valido.";
+            } else {
+                document.getElementById('invalid-y').innerHTML = "";
+
+            }
+        }
     </script>
 </body>
 

@@ -186,12 +186,19 @@
 }
 
 /* Style the tab content */
+
 .sec-tabs .tabcontent {
     display: none;
     padding: 20px;
     border: 1px solid #ccc;
     border-top: none;
     text-align: left;
+}
+
+.sec-tabs #Partecipanti .partcards {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    column-gap: 20px;
 }
 
 .box-modify-camp {

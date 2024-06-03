@@ -34,7 +34,6 @@ if (!isset($_SESSION['idamm'])) {
                 <a class="link-ban" href="index.php?page=profili">Profili</a><br><br>
                 <a class="link-ban" href="index.php?page=campagne">Campagne</a><br><br>
                 <a class="link-ban" href="index.php?page=blog">Blog</a><br><br>
-                <a class="link-ban" href="index.php?page=eventi">Eventi</a><br><br>
                 <a class="link-ban" href="loggout.php">Esci</a>
             </div>
         </div>

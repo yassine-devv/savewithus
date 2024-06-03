@@ -218,20 +218,23 @@ function openTab(evt, tabName) {
             }
 
             if (tabName == "Partecipanti") {
+                //document.getElementById(tabName).style.display = "grid";
                 document.getElementById(tabName).innerHTML = "";
                 if (data['result'] == false) {
                     document.getElementById(tabName).innerHTML += data["msg"];
                 }
 
                 if (data['result'] == true) {
-                    let count = Object.keys(data).length;
+                    let count = Object.keys(data['data']).length;
                     //console.log(data[0]['username']);
+                    document.getElementById(tabName).innerHTML += "<span>"+data['n_part']+" Partecipanti</span>";
+                    document.getElementById(tabName).innerHTML += '<div class="partcards">';
+
                     for (let i = 0; i < count; i++) {
-                        //let card = "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">" + data['data'][i]['username'] + "</h5><a class=\"card-link\" href='profile.php?id=" + data['data'][i]['id'] + "'>Profilo</a></div></div>";
-                        //console.log(data['data'][i]);
-                        document.getElementById(tabName).innerHTML += "<div class=\"card\" style=\"width: 18rem;\"><div class=\"card-body\"><h5 class=\"card-title\">" + data['data'][i]['username'] + "</h5><a class=\"card-link\" href='profile.php?id=" + data['data'][i]['id'] + "'>Profilo</a></div></div>";
+                        document.getElementById(tabName).innerHTML += "<div class=\"card\" style=\"width: 10rem;\"><div class=\"card-body\"><h5 class=\"card-title\">" + data['data'][i]['username'] + "</h5></div></div>";
                     }
 
+                    document.getElementById(tabName).innerHTML += "</div>";
                 }
             }
 

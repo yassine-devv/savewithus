@@ -2,6 +2,7 @@
 session_start();
 include("./functions.php");
 include("./db.php");
+include("./ricordami_cookie.php");
 
 if(!isset($_SESSION['iduser'])){
     header('location: login.php');
@@ -9,15 +10,22 @@ if(!isset($_SESSION['iduser'])){
 
 if($_SERVER['REQUEST_METHOD']=="POST"){
     if(isset($_POST["pubb-blog"])){
-        $titolo = $_POST["title-blog"];
-        $content = $_POST["descrizione"];
+        $titolo = addcslashes($_POST["title-blog"], "'");
+        $content = addcslashes($_POST["descrizione"], "'");
 
-        $sql = "INSERT INTO `blog`(`titolo`, `testo`, `created`, `stato`, `autore`) VALUES (\"".$titolo."\",\"".$content."\",'".date("Y-m-d")."','1','".$_SESSION['iduser']."')";
+        $sql = "INSERT INTO `blog`(`titolo`, `testo`, `created`, `stato`, `autore`) VALUES ('".$titolo."','".$content."','".date("Y-m-d")."','1','".$_SESSION['iduser']."')";
         //die($sql);
         //$result = $conn->query($sql);
 
         if($conn->query($sql)){
             header("location: blogs.php");
+        }
+    }
+    
+    if(isset($_POST['mod-blog'])){
+        $sql = "UPDATE blog SET blog.stato='1', blog.titolo='".addcslashes($_POST['title-blog'], "'")."', blog.testo='".addslashes($_POST['descrizione'])."' WHERE blog.id_blog=".$_GET['id'];
+        if($conn->query($sql)){
+            header("location: user.php?page=blog");
         }
     }
 }
@@ -45,27 +53,9 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
 </head>
 
 <body>
-    <div class="navbar">
-        <div class="img-logo">
-            <a href="./index.php">
-                SaveWithUs
-            </a>
-        </div>
-        <div class="links">
-            <a href="./index.php">Home</a>
-            <a href="campagne.php">Campagne</a>
-            <a href="blogs.php">Blog</a>
-            <a href="eventi.php">Eventi</a>
-            <?php
-            if (isset($_SESSION['iduser'])) {
-                echo '<a href="user.php">Ciao, ' . $_SESSION['username'] . '</a>';
-            } else {
-                echo '<a href="login.php">Login</a>';
-            }
-            ?>
-        </div>
-    </div>
+    <?php include "navbar.php" ?>
 
+    <?php if(!isset($_GET['id'])){?>
     <div class="main-blog">
         <div class="card-center">
             <h4>Nuovo Blog</h4>
@@ -78,36 +68,36 @@ if($_SERVER['REQUEST_METHOD']=="POST"){
             </form>
         </div>
     </div>
-
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col info-contact">
-                    <img src="./imgs/logoswu.png" alt="" width="300" height="100"><br>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                        </svg>
-                        <span>info@savewithus.com</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                        </svg>
-
-                        <span>+39 1234567890</span>
-                    </div>
-                </div>
-                <div class="col links">
-                    <a href="./index.php">Home</a>
-                    <a href="#">Campagne</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Eventi</a>
-                    <a href="#">Login</a>
-                </div>
-            </div>
+    <?php }else{
+        $sql = "SELECT blog.autore, blog.id_blog, blog.titolo, blog.testo FROM blog WHERE blog.id_blog=".$_GET['id'];
+        $ris = $conn->query($sql);
+        
+        if($ris->num_rows == 1){
+            $data = $ris->fetch_assoc();
+            if($_SESSION['iduser']!==$data['autore']){
+                header("location: user.php?page=blog");
+            }
+        }else{
+            header("location: user.php?page=blog");
+        }
+        ?>
+        <div class="main-blog">
+        <div class="card-center">
+            <h4>Modifica Blog</h4>
+            <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'])."?id=".$_GET['id'] ?>" method="post">
+                <label>Titolo del blog:</label>
+                <input type="text" class="input-title" placeholder="Dai un titolo al tuo blog" name="title-blog" value="<?= $data['titolo']?>">
+                <label>Contenuto: </label>
+                <textarea name="descrizione" rows="10" id="textarea-content" placeholder="Scrivi qua il contenuto del tuo blog"><?= $data['testo']?></textarea>
+                <input type="submit" class="btn btn-primary pubb-blog" name="mod-blog" value="Modifica">
+            </form>
         </div>
-    </footer>
+    </div>
+    <?php } ?>
+
+
+
+    <?php include "footer.php" ?>
 
 
 </body>

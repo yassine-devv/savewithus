@@ -2,6 +2,7 @@
 session_start();
 include("./db.php");
 include("./functions.php");
+include("./ricordami_cookie.php");
 prepara_json();
 
 if (!isset($_SESSION['iduser'])) {
@@ -39,26 +40,7 @@ if (!isset($_SESSION['iduser'])) {
 
 <body>
 
-    <div class="navbar">
-        <div class="img-logo">
-            <a href="./index.php">
-                SaveWithUs
-            </a>
-        </div>
-        <div class="links">
-            <a href="./index.php">Home</a>
-            <a href="campagne.php">Campagne</a>
-            <a href="blogs.php">Blog</a>
-            <a href="eventi.php">Eventi</a>
-            <?php
-            if (isset($_SESSION['iduser'])) {
-                echo '<a href="user.php">Ciao, ' . $_SESSION['username'] . '</a>';
-            } else {
-                echo '<a href="login.php">Login</a>';
-            }
-            ?>
-        </div>
-    </div>
+    <?php include "navbar.php" ?>   
 
     <?php
     if (isset($_GET['id'])) {
@@ -66,8 +48,8 @@ if (!isset($_SESSION['iduser'])) {
 
         if ($_SERVER['REQUEST_METHOD'] == "POST") {
             if (isset($_POST['modifica-camp'])) {
-                $nome_cmp = $_POST['nome-camp'];
-                $desc_cmp = $_POST['descrzione-camp'];
+                $nome_cmp = addcslashes($_POST['nome-camp'], "'");
+                $desc_cmp = addcslashes($_POST['descrzione-camp'], "'");
                 $data_cmp = $_POST['data-camp'];
 
                 $sql = "UPDATE `campagne` SET nome_campagna='" . $nome_cmp . "', descrizione='" . $desc_cmp . "', giorno_ritrovo='" . $data_cmp . "' WHERE campagne.id_campagna=" . $id;
@@ -84,8 +66,15 @@ if (!isset($_SESSION['iduser'])) {
         $sql = "SELECT utenti.id_user, utenti.username, campagne.id_campagna, campagne.nome_campagna, campagne.descrizione, campagne.giorno_ritrovo, campagne.foto, campagne.stato, campagne.autore, campagne.luogo, campagne.latitudine, campagne.longitudine FROM utenti join campagne on utenti.id_user=campagne.autore WHERE campagne.id_campagna=" . $id;
         $ris = $conn->query($sql);
 
-        $data = [];
 
+        if($ris->num_rows == 0){
+            header("Location: campagne.php");
+            exit(0);
+        }
+
+        $data = $ris->fetch_assoc();
+
+        /*
         $arrkeys = ['id_user', 'username', 'id_campagna', 'nome_campagna', 'descrizione', 'giorno_ritrovo', 'foto', 'stato', 'autore', 'luogo', 'latitudine', 'longitudine'];
         if ($ris->num_rows > 0) {
             while ($row = $ris->fetch_assoc()) {
@@ -95,6 +84,11 @@ if (!isset($_SESSION['iduser'])) {
             }
         } else {
             $cmp_notfound = "La campagna che si desidera non esiste.";
+        }*/
+
+        if($data['stato']=='1'){
+            header("location: user.php?page=campagne");
+            exit;
         }
 
         echo '<script>var lat=' . $data['latitudine'] . '</script>';
@@ -113,7 +107,8 @@ if (!isset($_SESSION['iduser'])) {
                             <?php
                             } else {
                             ?>
-                                <a href="./user.php?id=<?= $data['id_user'] ?>"><?= $data['username'] ?></a>
+                                <span><?= $data['username'] ?></span>
+                                
                             <?php
                             }
                             ?>
@@ -217,6 +212,7 @@ if (!isset($_SESSION['iduser'])) {
                     </div>
                     <div id="content"></div>
                 </div>
+
                 <div id="Partecipanti" class="tabcontent"></div>
 
             </div>
@@ -350,35 +346,7 @@ if (!isset($_SESSION['iduser'])) {
         </div>
     </div>
 
-    <footer>
-        <div class="container">
-            <div class="row">
-                <div class="col info-contact">
-                    <img src="./imgs/logoswu.png" alt="" width="300" height="100"><br>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
-                            <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
-                        </svg>
-                        <span>info@savewithus.com</span>
-                    </div>
-                    <div>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-telephone-fill" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z" />
-                        </svg>
-
-                        <span>+39 1234567890</span>
-                    </div>
-                </div>
-                <div class="col links">
-                    <a href="./index.php">Home</a>
-                    <a href="#">Campagne</a>
-                    <a href="#">Blog</a>
-                    <a href="#">Eventi</a>
-                    <a href="#">Login</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include "footer.php" ?>
 
     <script src="./js/campagne.js"></script>
 

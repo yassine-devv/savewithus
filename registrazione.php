@@ -14,16 +14,18 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
     //die($sql);
     if($conn->query($sql)){
+        /*
         $id = $conn->insert_id; //prendo l'ultimo id dell'utente
+
 
         $id_token = uniqid();
         $id_token_hash = password_hash($id_token, PASSWORD_BCRYPT);
 
-        $sql = "INSERT INTO `cod_tokens`(`token`, `id_user`) VALUES ('".$id_token_hash."','".$id."')";
+        $sql = "INSERT INTO `cod_tokens`(`token`, `id_user`) VALUES ('".$id_token_hash."','".$id."')";*/
 
-        if($conn->query($sql)){
+        //if($conn->query($sql)){
             header("location: login.php");
-        }
+        //}
         
     }
 }
@@ -50,26 +52,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST"){
 
 <body>
 
-    <div class="navbar">
-        <div class="img-logo">
-            <a href="./index.php">
-                SaveWithUs
-            </a>
-        </div>
-        <div class="links">
-            <a href="./index.php">Home</a>
-            <a href="campagne.php">Campagne</a>
-            <a href="blogs.php">Blog</a>
-            <a href="eventi.php">Eventi</a>
-            <?php 
-            if(isset($_SESSION['iduser'])){
-                echo '<a href="user.php">Ciao, '.$_SESSION['username'].'</a>';
-            }else{
-                echo '<a href="login.php">Login</a>';
-            }
-            ?>
-        </div>
-    </div>
+    <?php include "navbar.php" ?>
 
     <div class="container all-form-cite" style="margin: 0;">
         <div class="row form-cite form-cite-reg">
