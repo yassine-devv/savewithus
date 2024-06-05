@@ -103,11 +103,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <title>Segnala</title>
     <link rel="stylesheet" href="./style/style.css">
     <link rel="stylesheet" href="./style/segnala.css">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.3.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
 
@@ -183,13 +187,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                         <label for="address" class="formbold-form-label">Inserisci il luogo:</label>
         
                         <div class="row">
-                            <!-- <div class="col-8"> -->
-                                <input onkeyup="addr_search();" type="text" name="addr" value="" id="addr" size="58" class="formbold-form-input" />
-                            <!-- </div> -->
+                            <div class="col-8">
+                                <input type="text" name="addr" value="" id="addr" size="58" class="formbold-form-input" />
+                            </div>
 
-                            <!-- <div class="col-4">
+                            <div class="col-4">
                                 <button type="button" style="width: 100%;" class="btn btn-primary" onclick="addr_search();" class="">Cerca</button>
-                            </div> -->
+                            </div>
                             <br><br>
                             <div id="results"></div>
                         </div>
@@ -271,7 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
             console.log(dsp_name);
             console.log(lat);
             console.log(lon);
-            myMarker.bindPopup("Lat " + lat + "<br />Lon " + lon).openPopup();
+            myMarker.bindPopup(dsp_name).openPopup();
         }
 
         let marker = null;

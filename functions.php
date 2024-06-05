@@ -165,16 +165,16 @@ if (isset($_GET['Commenti'])) {
         $data = [];
         while ($row = $ris->fetch_assoc()) {
             //echo $row['commento'];
-            if (date("Y-m-d") >= $row['giorno_ritrovo']) { //controllo se l'evento è stato fatto o meno
+            //if (date("Y-m-d") >= $row['giorno_ritrovo']) { //controllo se l'evento è stato fatto o meno
                 $datadisp = true;
                 if ($row['commento'] !== null) {
                     array_push($data, $row);
                 }
-            } else {
-                $resp = ['result' => false, 'msg' => "Commenti ancora non disponibili!"];
-                echo json_encode($resp);
-                return;
-            }
+            //} else {
+            //    $resp = ['result' => false, 'msg' => "Commenti ancora non disponibili!"];
+            //    echo json_encode($resp);
+            //    return;
+            //}
         }
 
         if ($datadisp) {
@@ -203,7 +203,7 @@ if (isset($_GET['addcomment']) && isset($_GET['id'])) {
 
         if ($ris->num_rows > 0) { //utente iscritto alla campagna
             while ($row = $ris->fetch_assoc()) {
-                if ($row['giorno_ritrovo'] <= date("Y-m-d")) { //controllo se l'evento è stato fatto o meno
+                //if ($row['giorno_ritrovo'] <= date("Y-m-d")) { //controllo se l'evento è stato fatto o meno
                     $sql = "UPDATE partecipanti_camapgne SET partecipanti_camapgne.commento='" . addslashes($_GET['addcomment']) . "' WHERE partecipanti_camapgne.id_campagna=" . $_GET['id'] . " and partecipanti_camapgne.id_user=" . $_SESSION['iduser'];
 
                     $resp = [];
@@ -212,11 +212,11 @@ if (isset($_GET['addcomment']) && isset($_GET['id'])) {
                     } else {
                         $resp = ['result' => false, 'msg' => "Errore durante l'inserimento"];
                     }
-                } else {
-                    $resp = ['result' => false, 'msg' => "Impossibile aggiungere un commento perchè l'evento non è ancora stato tenuto."];
-                    echo json_encode($resp);
-                    return;
-                }
+                //} else {
+                    //$resp = ['result' => false, 'msg' => "Impossibile aggiungere un commento perchè l'evento non è ancora stato tenuto."];
+                    //echo json_encode($resp);
+                    //return;
+                //}
             }
         } else {
             $resp = ['result' => false, 'msg' => "Eseguire prima l'iscrizione alla campagna"];

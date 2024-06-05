@@ -10,6 +10,7 @@ include("./ricordami_cookie.php");
     </div>
     <div class="links">
         <a href="campagne.php">Campagne</a>
+        <a href="segnala.php">Segnala</a>
         <a href="blogs.php">Blog</a>
         <?php
         if (isset($_SESSION['iduser'])) {
